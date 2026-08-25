@@ -1,5 +1,3 @@
-[index (5).html](https://github.com/user-attachments/files/31431668/index.5.html)
-<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -482,7 +480,7 @@
           <span class="g-view">블로그 바로가기 →</span>
         </div>
       </a>
-      <a class="g-card" href="https://cafe.naver.com/f-e/cafes/31649815/menus/61?viewType=I" target="_blank" rel="noopener noreferrer">
+      <a class="g-card" href="https://buly.kr/4xaCOlT" target="_blank" rel="noopener noreferrer">
         <div class="g-thumb" style="background:linear-gradient(135deg,#FF9233,#E87A1B);"><span class="cat">선교사진</span></div>
         <div class="g-body">
           <h3>선교지 사진 모음</h3>
@@ -670,7 +668,7 @@
 
   // newsletter subscribe -> Google Sheets + email backend (via Apps Script Web App)
   // ▼▼▼ 아래 SCRIPT_URL 자리에 배포받은 웹 앱 주소를 붙여넣으면 실제 저장/메일 발송이 작동합니다.
-  const SUBSCRIBE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwT_T6yLlfa9ol8zw3cNXe8ZWhE87C5KmIbe2wokY4f_b7MA8802fueDxhLxm5-5NSmeQ/exec';
+  const SUBSCRIBE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzM5KHYwhhS0nh92ZhcDXWYJ-mkauxfUtrklWFSpMb7QgCyXbglO9L2OxZxmCWBHcmaoQ/exec';
 
   const subscribeForm = document.getElementById('subscribeForm');
   if (subscribeForm) {
