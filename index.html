@@ -257,35 +257,38 @@
     background:linear-gradient(180deg,var(--sky),var(--orange));display:inline-block;
   }
   .wall-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
   }
   .lane-empty{
     grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:13.5px;
     background:#fff;border-radius:16px;border:1px dashed var(--line);
   }
   .lane-card{
-    position:relative;aspect-ratio:1/1;overflow:hidden;cursor:pointer;
-    background:linear-gradient(135deg,#2E9FD6,#0B3C4D);border-radius:6px;
-    opacity:0;transform:scale(.95);animation:laneCardIn .5s ease forwards;
+    background:#fff;border-radius:18px;overflow:hidden;cursor:pointer;
+    box-shadow:0 8px 22px rgba(11,60,77,.07);
+    transition:transform .25s ease, box-shadow .25s ease;
+    opacity:0;transform:translateY(18px);animation:laneCardIn .5s ease forwards;
   }
-  .lane-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;}
-  .lane-card:hover img{transform:scale(1.08);}
-  .lane-card .wall-overlay{
-    position:absolute;inset:0;background:linear-gradient(0deg, rgba(8,30,38,.75) 0%, rgba(8,30,38,0) 55%);
-    opacity:0;transition:opacity .25s ease;
-    display:flex;align-items:flex-end;padding:12px;
-  }
-  .lane-card:hover .wall-overlay{opacity:1;}
-  .lane-card .wall-overlay span{
-    color:#fff;font-size:12px;font-weight:600;line-height:1.4;
+  .lane-card:hover{transform:translateY(-5px);box-shadow:0 18px 36px rgba(11,60,77,.13);}
+  .lane-thumb{aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg,#2E9FD6,#0B3C4D);}
+  .lane-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;}
+  .lane-card:hover .lane-thumb img{transform:scale(1.06);}
+  .lane-body{padding:16px 18px 20px;}
+  .lane-date{font-size:11.5px;font-weight:700;color:var(--orange-deep);letter-spacing:.03em;margin-bottom:7px;}
+  .lane-card h4{
+    font-size:15.5px;font-weight:800;color:var(--navy);line-height:1.45;margin-bottom:7px;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   }
-  @keyframes laneCardIn{to{opacity:1;transform:scale(1);}}
+  .lane-card .lane-excerpt{
+    font-size:12.8px;color:var(--ink-soft);line-height:1.65;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  @keyframes laneCardIn{to{opacity:1;transform:translateY(0);}}
   @media (max-width:760px){
-    .wall-grid{grid-template-columns:repeat(3,1fr);gap:4px;}
+    .wall-grid{grid-template-columns:repeat(2,1fr);gap:16px;}
   }
   @media (max-width:480px){
-    .wall-grid{grid-template-columns:repeat(2,1fr);gap:4px;}
+    .wall-grid{grid-template-columns:1fr;gap:16px;}
   }
 
   /* ===== Post lightbox (Notion posts) ===== */
@@ -903,17 +906,24 @@
       card.className = 'lane-card';
       card.style.animationDelay = (Math.min(i, 12) * 0.04) + 's';
 
+      const thumb = document.createElement('div');
+      thumb.className = 'lane-thumb';
       if (post.images && post.images[0]) {
         const img = document.createElement('img');
         img.src = post.images[0];
         img.alt = post.title || '';
-        card.appendChild(img);
+        thumb.appendChild(img);
       }
+      card.appendChild(thumb);
 
-      const overlay = document.createElement('div');
-      overlay.className = 'wall-overlay';
-      overlay.innerHTML = `<span>${escapeHtml(post.title)}</span>`;
-      card.appendChild(overlay);
+      const body = document.createElement('div');
+      body.className = 'lane-body';
+      body.innerHTML = `
+        <div class="lane-date">${formatDate(post.date)}</div>
+        <h4>${escapeHtml(post.title)}</h4>
+        <p class="lane-excerpt">${escapeHtml(post.summary || '')}</p>
+      `;
+      card.appendChild(body);
 
       card.addEventListener('click', () => openPostLightbox(post));
       el.appendChild(card);
