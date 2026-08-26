@@ -224,32 +224,47 @@
   .g-card{cursor:pointer;display:block;text-decoration:none;color:inherit;}
   .g-view{display:inline-block;margin-top:12px;font-size:12.5px;font-weight:700;color:var(--orange-deep);}
 
-  /* ===== Two-lane Notion gallery ===== */
-  .gallery-lanes{display:grid;grid-template-columns:1fr 1fr;gap:44px;}
-  .lane-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;gap:10px;flex-wrap:wrap;}
-  .lane-title{font-size:18px;font-weight:800;color:var(--navy);}
-  .lane-more{font-size:12.5px;font-weight:700;color:var(--orange-deep);white-space:nowrap;}
-  .lane-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  /* ===== Photo wall sections (Notion) ===== */
+  .photo-wall-section{padding:80px 6vw;background:var(--bg);}
+  .photo-wall-section.alt{background:var(--bg-alt);}
+  .wall-title{
+    font-size:22px;font-weight:800;color:var(--navy);margin-bottom:28px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .wall-title::before{
+    content:"";width:5px;height:20px;border-radius:3px;
+    background:linear-gradient(180deg,var(--sky),var(--orange));display:inline-block;
+  }
+  .wall-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+  }
   .lane-empty{
     grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:13.5px;
-    background:#fff;border-radius:16px;border:1px dashed var(--sand-line, var(--line));
+    background:#fff;border-radius:16px;border:1px dashed var(--line);
   }
   .lane-card{
-    background:#fff;border-radius:16px;overflow:hidden;cursor:pointer;
-    box-shadow:0 8px 22px rgba(11,60,77,.06);
-    transition:transform .25s ease, box-shadow .25s ease;
-    opacity:0;transform:translateY(16px);animation:laneCardIn .5s ease forwards;
+    position:relative;aspect-ratio:1/1;overflow:hidden;cursor:pointer;
+    background:linear-gradient(135deg,#2E9FD6,#0B3C4D);border-radius:6px;
+    opacity:0;transform:scale(.95);animation:laneCardIn .5s ease forwards;
   }
-  .lane-card:hover{transform:translateY(-5px);box-shadow:0 16px 32px rgba(11,60,77,.12);}
-  @keyframes laneCardIn{to{opacity:1;transform:translateY(0);}}
-  .lane-thumb{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#2E9FD6,#0B3C4D);overflow:hidden;}
-  .lane-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
-  .lane-body{padding:14px 16px 16px;}
-  .lane-body h4{font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.5;margin-bottom:4px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .lane-body .lane-date{font-size:11px;color:var(--ink-soft);}
+  .lane-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;}
+  .lane-card:hover img{transform:scale(1.08);}
+  .lane-card .wall-overlay{
+    position:absolute;inset:0;background:linear-gradient(0deg, rgba(8,30,38,.75) 0%, rgba(8,30,38,0) 55%);
+    opacity:0;transition:opacity .25s ease;
+    display:flex;align-items:flex-end;padding:12px;
+  }
+  .lane-card:hover .wall-overlay{opacity:1;}
+  .lane-card .wall-overlay span{
+    color:#fff;font-size:12px;font-weight:600;line-height:1.4;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  @keyframes laneCardIn{to{opacity:1;transform:scale(1);}}
   @media (max-width:760px){
-    .gallery-lanes{grid-template-columns:1fr;gap:36px;}
+    .wall-grid{grid-template-columns:repeat(3,1fr);gap:4px;}
+  }
+  @media (max-width:480px){
+    .wall-grid{grid-template-columns:repeat(2,1fr);gap:4px;}
   }
 
   /* ===== Post lightbox (Notion posts) ===== */
@@ -519,25 +534,23 @@
       <h2>선교 이야기 &amp; 일상 이야기</h2>
       <p>이산의 하늘 아래, 오늘도 이어지는 만남과 이야기를 전해드립니다.</p>
     </div>
+  </div>
+</section>
 
-    <div class="gallery-lanes">
-      <div class="lane">
-        <div class="lane-head">
-          <h3 class="lane-title">선교 이야기</h3>
-        </div>
-        <div class="lane-grid" id="laneMission">
-          <p class="lane-empty">불러오는 중...</p>
-        </div>
-      </div>
+<section class="photo-wall-section" id="mission-stories">
+  <div class="section-inner">
+    <h3 class="wall-title">선교 이야기</h3>
+    <div class="wall-grid" id="laneMission">
+      <p class="lane-empty">불러오는 중...</p>
+    </div>
+  </div>
+</section>
 
-      <div class="lane">
-        <div class="lane-head">
-          <h3 class="lane-title">일상 이야기</h3>
-        </div>
-        <div class="lane-grid" id="laneDaily">
-          <p class="lane-empty">불러오는 중...</p>
-        </div>
-      </div>
+<section class="photo-wall-section alt" id="daily-stories">
+  <div class="section-inner">
+    <h3 class="wall-title">일상 이야기</h3>
+    <div class="wall-grid" id="laneDaily">
+      <p class="lane-empty">불러오는 중...</p>
     </div>
   </div>
 </section>
@@ -791,25 +804,22 @@
       el.innerHTML = '<p class="lane-empty">아직 등록된 소식이 없습니다.</p>';
       return;
     }
-    posts.slice(0, 6).forEach((post, i) => {
+    posts.slice(0, 24).forEach((post, i) => {
       const card = document.createElement('div');
       card.className = 'lane-card';
-      card.style.animationDelay = (i * 0.06) + 's';
+      card.style.animationDelay = (Math.min(i, 12) * 0.04) + 's';
 
-      const thumb = document.createElement('div');
-      thumb.className = 'lane-thumb';
       if (post.images && post.images[0]) {
         const img = document.createElement('img');
         img.src = post.images[0];
         img.alt = post.title || '';
-        thumb.appendChild(img);
+        card.appendChild(img);
       }
-      card.appendChild(thumb);
 
-      const body = document.createElement('div');
-      body.className = 'lane-body';
-      body.innerHTML = `<h4>${escapeHtml(post.title)}</h4><div class="lane-date">${formatDate(post.date)}</div>`;
-      card.appendChild(body);
+      const overlay = document.createElement('div');
+      overlay.className = 'wall-overlay';
+      overlay.innerHTML = `<span>${escapeHtml(post.title)}</span>`;
+      card.appendChild(overlay);
 
       card.addEventListener('click', () => openPostLightbox(post));
       el.appendChild(card);
