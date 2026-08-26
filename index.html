@@ -318,11 +318,24 @@
     background:#fffdf5;border:1px solid #F0E6C8;border-radius:16px;padding:20px;margin-bottom:22px;
     box-shadow:0 8px 20px rgba(11,60,77,.05);
   }
-  .note-form textarea{
-    width:100%;border:none;background:transparent;resize:none;font-family:inherit;font-size:14px;
-    color:var(--ink);min-height:60px;line-height:1.6;
+  .note-form label{
+    display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--orange-deep);margin-bottom:8px;
   }
-  .note-form textarea:focus{outline:none;}
+  .note-form label.name-label{color:var(--ink-soft);margin-top:14px;font-weight:600;}
+  .note-form .step-badge{
+    display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
+    background:var(--orange-deep);color:#fff;font-size:10.5px;font-weight:800;flex-shrink:0;
+  }
+  .note-form label.name-label .step-badge{background:var(--ink-soft);}
+  .note-form textarea{
+    width:100%;border:1.5px solid var(--line);background:#fff;resize:none;font-family:inherit;font-size:14px;
+    color:var(--ink);min-height:70px;line-height:1.6;padding:12px 14px;border-radius:10px;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .note-form textarea::placeholder{color:var(--ink-soft);}
+  .note-form textarea:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(46,159,214,.15);}
+  .note-form textarea.shake-error{border-color:#E8628C;animation:shakeError .35s ease;}
+  @keyframes shakeError{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
   .note-form .note-row{display:flex;gap:10px;margin-top:12px;}
   .note-form input[type=text]{
     flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13.5px;font-family:inherit;
@@ -608,9 +621,11 @@
     </div>
     <div class="guestbook" style="max-width:640px;margin:0 auto;">
       <div class="note-form">
-        <textarea placeholder="선교사님 부부에게 응원의 한마디를 남겨주세요 :)"></textarea>
+        <label for="guestbookMessage"><span class="step-badge">1</span> 응원 메시지 (필수)</label>
+        <textarea id="guestbookMessage" placeholder="여기에 응원 메시지를 적어주세요 :)"></textarea>
+        <label for="guestbookName" class="name-label"><span class="step-badge">2</span> 이름 (선택)</label>
         <div class="note-row">
-          <input type="text" placeholder="이름 (선택)">
+          <input type="text" id="guestbookName" placeholder="예: 사랑하는 교회 성도">
           <button type="button">남기기</button>
         </div>
       </div>
@@ -924,7 +939,15 @@
     const textEl = document.querySelector('.note-form textarea');
     const nameEl = document.querySelector('.note-form input[type=text]');
     const text = textEl.value.trim();
-    if (!text) return;
+    if (!text) {
+      // 메시지를 안 쓰고 눌렀을 때 눈에 보이는 피드백을 줌 (조용히 무시하지 않음)
+      textEl.classList.remove('shake-error');
+      void textEl.offsetWidth; // 애니메이션 재시작을 위한 강제 리플로우
+      textEl.classList.add('shake-error');
+      textEl.focus();
+      setTimeout(() => textEl.classList.remove('shake-error'), 500);
+      return;
+    }
     const name = nameEl.value.trim() || '익명의 동역자';
 
     // 1) 화면에 즉시 표시
