@@ -932,8 +932,14 @@
   }
   const visionBadge = document.getElementById('visionBadge');
   const visionBtn = document.getElementById('visionBtn');
-  if (visionBadge) visionBadge.addEventListener('click', openVisionDoc);
-  if (visionBtn) visionBtn.addEventListener('click', openVisionDoc);
+  if (visionBadge) {
+    visionBadge.addEventListener('mouseenter', () => { if (visionPost) prefetchPostDetail(visionPost); });
+    visionBadge.addEventListener('click', openVisionDoc);
+  }
+  if (visionBtn) {
+    visionBtn.addEventListener('mouseenter', () => { if (visionPost) prefetchPostDetail(visionPost); });
+    visionBtn.addEventListener('click', openVisionDoc);
+  }
   document.querySelectorAll('.donate-copy-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const text = btn.getAttribute('data-copy');
@@ -1002,6 +1008,17 @@
     return `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')}`;
   }
 
+  const detailCache = new Map(); // 이미 불러온 글의 본문/사진을 저장해서 재클릭 시 즉시 표시
+
+  function prefetchPostDetail(post) {
+    if (!post.id || detailCache.has(post.id)) return;
+    if (!SUBSCRIBE_SCRIPT_URL || SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') !== -1) return;
+    fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
+      .then(res => res.json())
+      .then(data => { detailCache.set(post.id, data); })
+      .catch(() => {});
+  }
+
   function renderLane(elId, posts) {
     const el = document.getElementById(elId);
     if (!el) return;
@@ -1021,6 +1038,7 @@
         const img = document.createElement('img');
         img.src = post.images[0];
         img.alt = post.title || '';
+        img.loading = 'eager';
         thumb.appendChild(img);
       }
       card.appendChild(thumb);
@@ -1034,6 +1052,9 @@
       `;
       card.appendChild(body);
 
+      // 마우스를 올리거나 터치하는 순간 미리 불러오기 시작 → 클릭했을 때 바로 뜸
+      card.addEventListener('mouseenter', () => prefetchPostDetail(post));
+      card.addEventListener('touchstart', () => prefetchPostDetail(post), { passive: true });
       card.addEventListener('click', () => openPostLightbox(post));
       el.appendChild(card);
     });
@@ -1045,6 +1066,18 @@
   const postLightboxTitle = document.getElementById('postLightboxTitle');
   const postLightboxSummary = document.getElementById('postLightboxSummary');
   const postLightboxClose = document.getElementById('postLightboxClose');
+
+  function applyPostDetail(post, data) {
+    postLightboxSummary.textContent = (data.content && data.content.trim()) ? data.content : (post.summary || '');
+    if (data.images && data.images.length) {
+      data.images.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = post.title || '';
+        postLightboxImages.appendChild(img);
+      });
+    }
+  }
 
   function openPostLightbox(post) {
     postLightboxImages.innerHTML = '';
@@ -1060,21 +1093,16 @@
     postLightboxOverlay.classList.add('open');
     lockBodyScroll();
 
-    // 노션 페이지의 전체 본문 내용 + 본문에 넣은 추가 사진을 클릭했을 때만 불러옴 (목록 로딩 속도 개선)
-    if (post.id && SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
+    // 노션 페이지의 전체 본문 내용 + 본문에 넣은 추가 사진 — 이미 미리 불러와 둔 게 있으면 바로 표시(버퍼링 없음)
+    if (post.id && detailCache.has(post.id)) {
+      applyPostDetail(post, detailCache.get(post.id));
+    } else if (post.id && SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
       postLightboxSummary.textContent = (post.summary ? post.summary + '\n\n' : '') + '본문을 불러오는 중...';
       fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
         .then(res => res.json())
         .then(data => {
-          postLightboxSummary.textContent = (data.content && data.content.trim()) ? data.content : (post.summary || '');
-          if (data.images && data.images.length) {
-            data.images.forEach(src => {
-              const img = document.createElement('img');
-              img.src = src;
-              img.alt = post.title || '';
-              postLightboxImages.appendChild(img);
-            });
-          }
+          detailCache.set(post.id, data);
+          applyPostDetail(post, data);
         })
         .catch(() => {
           postLightboxSummary.textContent = post.summary || '';
@@ -1145,6 +1173,8 @@
       arrow.textContent = '→';
       row.appendChild(arrow);
 
+      row.addEventListener('mouseenter', () => prefetchPostDetail(post));
+      row.addEventListener('touchstart', () => prefetchPostDetail(post), { passive: true });
       row.addEventListener('click', () => openPostLightbox(post));
       el.appendChild(row);
     });
