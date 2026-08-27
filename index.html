@@ -1013,10 +1013,23 @@
   function prefetchPostDetail(post) {
     if (!post.id || detailCache.has(post.id)) return;
     if (!SUBSCRIBE_SCRIPT_URL || SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') !== -1) return;
+    detailCache.set(post.id, 'loading'); // 중복 요청 방지용 임시 표시
     fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
       .then(res => res.json())
-      .then(data => { detailCache.set(post.id, data); })
-      .catch(() => {});
+      .then(data => {
+        detailCache.set(post.id, data);
+        // 본문 사진도 실제로 미리 다운로드해서 브라우저에 캐시해둠 (클릭 시 즉시 표시)
+        (data.images || []).forEach(src => { const im = new Image(); im.src = src; });
+      })
+      .catch(() => { detailCache.delete(post.id); });
+  }
+
+  function autoPrefetchAll(postLists) {
+    // 화면에 보이는 글들을 페이지 로드 직후 순서대로 조금씩 미리 불러옴 (서버에 한꺼번에 몰리지 않도록 간격을 둠)
+    const all = [].concat(...postLists).filter(p => p && p.id);
+    all.forEach((post, i) => {
+      setTimeout(() => prefetchPostDetail(post), i * 250);
+    });
   }
 
   function renderLane(elId, posts) {
@@ -1094,17 +1107,20 @@
     lockBodyScroll();
 
     // 노션 페이지의 전체 본문 내용 + 본문에 넣은 추가 사진 — 이미 미리 불러와 둔 게 있으면 바로 표시(버퍼링 없음)
-    if (post.id && detailCache.has(post.id)) {
-      applyPostDetail(post, detailCache.get(post.id));
+    const cached = post.id ? detailCache.get(post.id) : null;
+    if (cached && cached !== 'loading') {
+      applyPostDetail(post, cached);
     } else if (post.id && SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
       postLightboxSummary.textContent = (post.summary ? post.summary + '\n\n' : '') + '본문을 불러오는 중...';
       fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
         .then(res => res.json())
         .then(data => {
           detailCache.set(post.id, data);
+          (data.images || []).forEach(src => { const im = new Image(); im.src = src; });
           applyPostDetail(post, data);
         })
         .catch(() => {
+          detailCache.delete(post.id);
           postLightboxSummary.textContent = post.summary || '';
         });
     }
@@ -1119,12 +1135,23 @@
       .then(res => res.json())
       .then(data => {
         const posts = data.posts || [];
-        renderLane('laneJourney', posts.filter(p => p.category === '선교사의 부르심').slice(0, 3));
-        renderLane('laneTraining', posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3));
-        renderLane('laneMission', posts.filter(p => p.category === '선교 이야기').slice(0, 3));
-        renderLane('laneDaily', posts.filter(p => p.category === '일상 이야기').slice(0, 3));
-        renderPrayerLetters(posts.filter(p => p.category === '기도 편지' || p.category === '기도편지'));
+        const journeyPosts = posts.filter(p => p.category === '선교사의 부르심').slice(0, 3);
+        const trainingPosts = posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3);
+        const missionPosts = posts.filter(p => p.category === '선교 이야기').slice(0, 3);
+        const dailyPosts = posts.filter(p => p.category === '일상 이야기').slice(0, 3);
+        const letterPosts = posts.filter(p => p.category === '기도 편지' || p.category === '기도편지');
+        renderLane('laneJourney', journeyPosts);
+        renderLane('laneTraining', trainingPosts);
+        renderLane('laneMission', missionPosts);
+        renderLane('laneDaily', dailyPosts);
+        renderPrayerLetters(letterPosts);
         visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
+
+        // 화면에 보이는 글들을 페이지 로드 직후 순서대로 미리 불러와서 클릭 시 버퍼링 없이 뜨도록 함
+        autoPrefetchAll([
+          journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
+          visionPost ? [visionPost] : []
+        ]);
       })
       .catch(() => {
         renderLane('laneJourney', []);
