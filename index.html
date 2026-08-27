@@ -591,15 +591,43 @@
     <button class="donate-close" id="donateClose" aria-label="닫기">✕</button>
     <h3>선교 동역 안내</h3>
     <p class="sub">작은 정성이 이산 땅의 복음의 씨앗이 됩니다.</p>
+
+    <!-- 계좌 안내 영역 (예금주: 김영진) -->
     <div class="donate-account">
       <span class="tag">1. 개인 후원</span>
       <div class="num">농협 351-0435-4009-73 (김영진)</div>
       <button class="donate-copy-btn" data-copy="351-0435-4009-73">계좌번호 복사</button>
     </div>
+
     <div class="donate-account">
       <span class="tag">2. 정기 후원</span>
       <div class="note">추후 파송식 일정과 맞춰서 열릴 예정입니다.</div>
     </div>
+
+    <!-- Formspree 연동 문의/기도제목 전송 폼 (action 적용) -->
+    <form action="https://formspree.io/f/mbgjrybn" method="POST" style="margin-top:20px; border-top:1px solid var(--line); padding-top:16px;">
+      <span class="tag" style="display:block; font-size:12px; font-weight:700; color:var(--orange-deep); margin-bottom:10px;">3. 선교 문의 및 기도제목 전송</span>
+      
+      <div style="margin-bottom:10px;">
+        <input type="text" name="name" required placeholder="성함 / 교회명" 
+               style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--line); font-size:13.5px; background:var(--bg-alt);">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <input type="email" name="email" required placeholder="답변받으실 이메일" 
+               style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--line); font-size:13.5px; background:var(--bg-alt);">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <textarea name="message" rows="3" required placeholder="응원 메시지나 문의사항을 적어주세요" 
+                  style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--line); font-size:13.5px; background:var(--bg-alt); resize:none;"></textarea>
+      </div>
+
+      <button type="submit" class="btn-donate" style="width:100%; border-radius:8px; padding:10px; font-size:14px;">
+        메시지 보내기
+      </button>
+    </form>
+
   </div>
 </div>
 
