@@ -63,7 +63,7 @@
   header.scrolled .logo-text .nav-logo-img{height:30px;}
   .logo-text .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0;}
 
-  nav.main-nav{display:flex;align-items:center;gap:42px;}
+  nav.main-nav{display:flex;align-items:center;gap:32px;}
   nav.main-nav a{
     font-size:17px;font-weight:600;color:#fff;position:relative;padding:4px 0;
     transition:color .25s;
@@ -76,6 +76,75 @@
   nav.main-nav a:hover{color:var(--orange);}
   header.scrolled nav.main-nav a:hover{color:var(--navy);}
   nav.main-nav a:hover::after{width:100%;}
+
+  /* ===== Custom Language Translator UI ===== */
+  .lang-translator-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .btn-lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sky);
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14.5px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(46, 159, 214, 0.35);
+    transition: all .22s ease;
+  }
+  .btn-lang-toggle:hover {
+    background: #2587b8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(46, 159, 214, 0.45);
+  }
+  .btn-lang-toggle svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 12px 32px rgba(11, 60, 77, 0.18);
+    border: 1px solid var(--line);
+    min-width: 140px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 250;
+  }
+  .lang-dropdown.open {
+    display: flex;
+  }
+  .lang-dropdown button {
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .18s ease, color .18s ease;
+  }
+  .lang-dropdown button:hover {
+    background: var(--sky-soft);
+    color: var(--sky);
+  }
 
   .btn-donate{
     background:var(--orange);color:#fff;padding:12px 28px;border-radius:100px;
@@ -166,6 +235,37 @@
   .sr-text strong{display:block;font-size:13.5px;color:var(--navy);}
   .sr-text span{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
   .sr-empty{padding:16px;font-size:13px;color:var(--ink-soft);text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="logo-text">
+    <span>김&박 선교사의 태국 이야기</span>
+    <span class="dot"></span>
+  </a>
+
+  <nav class="main-nav">
+    <!-- 세련된 파란색 언어 번역기 버튼 & 드롭다운 -->
+    <div class="lang-translator-wrapper">
+      <button type="button" class="btn-lang-toggle" onclick="document.querySelector('.lang-dropdown').classList.toggle('open')">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span>Language</span>
+      </button>
+      <div class="lang-dropdown">
+        <button type="button" onclick="alert('한국어로 변경합니다.')">한국어</button>
+        <button type="button" onclick="alert('Switching to English.')">English</button>
+        <button type="button" onclick="alert('เปลี่ยนเป็นภาษาไทยแล้ว')">ไทย (태국어)</button>
+      </div>
+    </div>
+
+    <button class="btn-donate">후원하기</button>
+  </nav>
+</header>
 
   /* ===== 카테고리 전체보기(가상 페이지) 오버레이 ===== */
   .category-overlay{
