@@ -66,7 +66,7 @@
   nav.main-nav{display:flex;align-items:center;gap:42px;}
   nav.main-nav a{
     font-size:17px;font-weight:600;color:#fff;position:relative;padding:4px 0;
-    transition:color .25s;
+    transition:color .25s, font-size .25s; white-space:nowrap;
   }
   header.scrolled nav.main-nav a{color:var(--navy);}
   nav.main-nav a::after{
@@ -740,6 +740,15 @@
   .socials a:hover svg{stroke:#fff;}
 
   /* ===== Responsive ===== */
+  @media (max-width:1180px){
+    nav.main-nav{gap:22px;}
+    nav.main-nav a{font-size:14.5px;}
+    .logo-text{font-size:16px;}
+    .logo-text .nav-logo-img{height:30px;}
+    .header-search input{width:100px;}
+    .lang-switch select{padding:6px 24px 6px 30px;font-size:12px;}
+    .btn-donate{padding:10px 18px;font-size:13px;}
+  }
   @media (max-width:980px){
     .gallery-grid{grid-template-columns:1fr 1fr;}
     .support-grid{grid-template-columns:1fr;gap:44px;}
@@ -765,8 +774,8 @@
     .footer-grid{grid-template-columns:1fr;gap:36px;}
     .footer-bottom{flex-direction:column;align-items:flex-start;}
   /* ===== 사역지 지도 ===== */
-  .field-map-wrap{max-width:1040px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:0 14px 30px rgba(11,60,77,.12);border:1px solid var(--line);}
-  .field-map-wrap iframe{width:100%;height:560px;border:0;display:block;}
+  .field-map-wrap{width:13cm;max-width:100%;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:0 14px 30px rgba(11,60,77,.12);border:1px solid var(--line);}
+  .field-map-wrap iframe{width:100%;height:7cm;border:0;display:block;}
   .field-map-hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:12px;}
   .field-map-hint a{color:var(--sky);font-weight:700;}
 
@@ -782,28 +791,6 @@
   }
   .prayer-btn:hover{background:#2585b3;transform:translateY(-1px);}
   .prayer-btn:disabled{opacity:.55;cursor:default;transform:none;}
-
-  /* ===== 글별 공유하기 (상단 아이콘 버튼 + 팝오버) ===== */
-  .post-share-toggle{
-    position:absolute;top:18px;right:60px;display:flex;align-items:center;gap:5px;
-    background:var(--bg-alt);border:none;border-radius:100px;padding:7px 14px;
-    font-size:12.5px;font-weight:700;color:var(--navy);cursor:pointer;transition:background .2s;
-  }
-  .post-share-toggle:hover{background:var(--sand-line);}
-  .post-share-toggle svg{width:14px;height:14px;}
-  .post-share-panel{
-    position:absolute;top:56px;right:18px;background:#fff;border-radius:14px;
-    box-shadow:0 12px 28px rgba(11,60,77,.18);padding:10px;display:none;gap:8px;z-index:20;
-  }
-  .post-share-panel.open{display:flex;}
-  .post-share-icon-btn{
-    display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--bg-alt);
-    border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;
-    font-size:10.5px;font-weight:700;color:var(--navy);transition:background .15s;min-width:64px;
-  }
-  .post-share-icon-btn:hover{background:var(--sky-soft);}
-  .post-share-icon-btn svg{width:18px;height:18px;}
-  .post-share-icon-btn.copied{background:var(--orange);color:#fff;}
 
   /* ===== 유튜브 영상 카드 ===== */
   .lane-thumb, .pc-thumb, .sr-thumb{position:relative;}
@@ -829,7 +816,6 @@
   header.scrolled .lang-switch select:hover{background:var(--sand-line);}
 
     .sticky-row{flex-direction:column;}
-    .field-map-wrap iframe{height:340px;}
   }
 </style>
 </head>
@@ -1130,7 +1116,7 @@
 <section class="guestbook-section" id="prayer-counter-section" style="padding-top:70px;">
   <div class="section-inner">
     <div class="prayer-counter">
-      <div class="pc-label" data-i18n="prayer.label">🙏 동역자님들이 함께 기도해주셨어요</div>
+      <div class="pc-label" id="prayerLabelText">🙏 오늘 <strong id="prayerDailyNum">0</strong>명의 동역자님들이 함께 기도해주셨어요</div>
       <button class="prayer-btn" id="prayerBtn" type="button" data-i18n="prayer.btn">🙏 저도 기도했어요</button>
     </div>
   </div>
@@ -1138,11 +1124,6 @@
 
 <div class="post-lightbox-overlay" id="postLightboxOverlay">
   <div class="post-lightbox-modal">
-    <button class="post-share-toggle" id="postShareToggle" type="button" aria-label="공유">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-3.2M8.6 13.4l6.8 3.2"/></svg>
-      공유
-    </button>
-    <div class="post-share-panel" id="postSharePanel"></div>
     <button class="donate-close" id="postLightboxClose" aria-label="닫기">✕</button>
     <div class="post-lightbox-video" id="postLightboxVideo" style="display:none;">
       <iframe id="postLightboxVideoFrame" src="" title="영상" allowfullscreen></iframe>
@@ -1428,7 +1409,7 @@
       'hero.title': 'Sharing the Gospel<br>and love in Thailand.',
       'hero.visionBtn': 'Read our vision statement',
       'map.title': 'Field Map', 'map.sub': 'Key places where we serve on the field.',
-      'prayer.label': '\ud83d\ude4f Partners have prayed together with us', 'prayer.btn': '\ud83d\ude4f I prayed too',
+      'prayer.btn': '\ud83d\ude4f I prayed too',
       'gallery.title': 'Missionary & Ministry Stories', 'gallery.sub': 'Stories from under the Isan sky in Thailand.',
       'guestbook.title': 'Messages of Blessing', 'guestbook.sub': 'Leave a warm word of blessing for the missionary family.',
     }
@@ -1453,25 +1434,46 @@
   const langSwitch = document.getElementById('langSwitch');
   if (langSwitch) {
     langSwitch.value = currentLang;
-    langSwitch.addEventListener('change', () => applyLang(langSwitch.value));
+    langSwitch.addEventListener('change', () => { applyLang(langSwitch.value); renderPrayerLabel(); });
     applyLang(currentLang);
   }
 
   // ===== 글로벌 기도 카운터 =====
-  function updatePrayerCountDisplays(n) {
+  let currentDailyPrayerCount = 0;
+  function renderPrayerLabel() {
+    const el = document.getElementById('prayerLabelText');
+    const numEl = document.getElementById('prayerDailyNum');
+    if (!el || !numEl) return;
+    numEl.textContent = currentDailyPrayerCount.toLocaleString();
+    // 라벨의 나머지 텍스트는 언어에 맞게 손으로 채워줍니다 (data-i18n을 쓰지 않는 이유는
+    // data-i18n이 textContent를 통째로 바꿔서 안의 숫자(strong)까지 지워버리기 때문입니다).
+    const before = el.querySelector('strong') ? el.childNodes[0] : null;
+    if (currentLang === 'en') {
+      if (before) before.textContent = '\ud83d\ude4f Today, ';
+      numEl.nextSibling && (numEl.nextSibling.textContent = ' partners have prayed with us');
+    } else {
+      if (before) before.textContent = '\ud83d\ude4f 오늘 ';
+      numEl.nextSibling && (numEl.nextSibling.textContent = '명의 동역자님들이 함께 기도해주셨어요');
+    }
+  }
+  function updatePrayerCountDisplays(total, daily) {
     const finalNumEl = document.getElementById('prayerCountFinalNum');
-    if (finalNumEl) finalNumEl.textContent = (n || 0).toLocaleString();
+    if (finalNumEl && total !== undefined) finalNumEl.textContent = (total || 0).toLocaleString();
+    if (daily !== undefined) {
+      currentDailyPrayerCount = daily || 0;
+      renderPrayerLabel();
+    }
   }
   (function initPrayerCounter() {
     const btn = document.getElementById('prayerBtn');
     if (!SUBSCRIBE_SCRIPT_URL || SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') !== -1) {
-      updatePrayerCountDisplays(0);
+      updatePrayerCountDisplays(0, 0);
       return;
     }
     fetch(SUBSCRIBE_SCRIPT_URL + '?type=prayer-count')
       .then(res => res.json())
-      .then(data => { updatePrayerCountDisplays(data.count || 0); })
-      .catch(() => { updatePrayerCountDisplays(0); });
+      .then(data => { updatePrayerCountDisplays(data.count || 0, data.dailyCount || 0); })
+      .catch(() => { updatePrayerCountDisplays(0, 0); });
 
     if (!btn) return;
     btn.addEventListener('click', () => {
@@ -1480,8 +1482,8 @@
       btn.textContent = '기도가 전달되었어요 🙏';
       // 화면에는 즉시 반영
       const finalNumEl = document.getElementById('prayerCountFinalNum');
-      const cur = parseInt((finalNumEl?.textContent || '0').replace(/,/g, ''), 10) || 0;
-      updatePrayerCountDisplays(cur + 1);
+      const curTotal = parseInt((finalNumEl?.textContent || '0').replace(/,/g, ''), 10) || 0;
+      updatePrayerCountDisplays(curTotal + 1, currentDailyPrayerCount + 1);
       // 서버에도 실제로 반영 (중복 클릭 방지를 위해 이번 기기에서 한 번만)
       try { localStorage.setItem('prayedAt', String(Date.now())); } catch (e) {}
       const formData = new FormData();
@@ -1732,66 +1734,6 @@
     thumbEl.appendChild(badge);
   }
 
-  // ===== 글별 공유하기 (아이콘 버튼 팝오버) =====
-  function buildShareUrl(post) {
-    // 노션 글은 별도 URL이 없으므로 홈페이지 주소 + 글 제목으로 공유 링크를 구성합니다.
-    const base = location.origin + location.pathname;
-    return post && post.id ? base + '#post-' + encodeURIComponent(post.id) : base;
-  }
-  const postShareToggle = document.getElementById('postShareToggle');
-  const postSharePanel = document.getElementById('postSharePanel');
-  function closeSharePanel() { postSharePanel.classList.remove('open'); }
-  if (postShareToggle) {
-    postShareToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      postSharePanel.classList.toggle('open');
-    });
-    document.addEventListener('click', (e) => {
-      if (!postSharePanel.contains(e.target) && e.target !== postShareToggle) closeSharePanel();
-    });
-  }
-  function renderShareRow(post) {
-    if (!postSharePanel) return;
-    postSharePanel.innerHTML = '';
-    closeSharePanel();
-    const shareUrl = buildShareUrl(post);
-    const shareTitle = post.title || '태국 선교 이야기';
-
-    // 모바일에서는 OS 공유창(Web Share API)이 뜨며, 설치된 카카오톡으로도 바로 공유할 수 있습니다.
-    if (navigator.share) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'post-share-icon-btn';
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-3.2M8.6 13.4l6.8 3.2"/></svg><span>공유하기</span>';
-      btn.addEventListener('click', () => {
-        navigator.share({ title: shareTitle, text: shareTitle, url: shareUrl }).catch(() => {});
-      });
-      postSharePanel.appendChild(btn);
-    } else {
-      const fb = document.createElement('a');
-      fb.className = 'post-share-icon-btn';
-      fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
-      fb.target = '_blank';
-      fb.rel = 'noopener noreferrer';
-      fb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg><span>Facebook</span>';
-      postSharePanel.appendChild(fb);
-    }
-
-    const copyBtn = document.createElement('button');
-    copyBtn.type = 'button';
-    copyBtn.className = 'post-share-icon-btn';
-    copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.07 0l2.83-2.83a5 5 0 00-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 00-7.07 0L4.1 13.83a5 5 0 007.07 7.07l1.5-1.5"/></svg><span>링크 복사</span>';
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard?.writeText(shareUrl).then(() => {
-        copyBtn.classList.add('copied');
-        const orig = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<span>복사됨!</span>';
-        setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.innerHTML = orig; }, 1500);
-      });
-    });
-    postSharePanel.appendChild(copyBtn);
-  }
-
   // ===== 게시글별 "기도하겠습니다" 토글 버튼 =====
   function getPrayedPostIds() {
     try { return JSON.parse(localStorage.getItem('prayedPostIds') || '[]'); } catch (e) { return []; }
@@ -1813,12 +1755,10 @@
     formData.append('type', 'prayer-count');
     formData.append('delta', String(delta));
     fetch(SUBSCRIBE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData }).catch(() => {});
-    // 화면에 최종 카운트 박스가 있다면 바로 반영
+    // 화면에 최종 카운트 박스 / 오늘 카운트 라벨이 있다면 바로 반영
     const finalNumEl = document.getElementById('prayerCountFinalNum');
-    if (finalNumEl) {
-      const cur = parseInt((finalNumEl.textContent || '0').replace(/,/g, ''), 10) || 0;
-      updatePrayerCountDisplays(Math.max(0, cur + delta));
-    }
+    const cur = finalNumEl ? (parseInt((finalNumEl.textContent || '0').replace(/,/g, ''), 10) || 0) : 0;
+    updatePrayerCountDisplays(Math.max(0, cur + delta), Math.max(0, currentDailyPrayerCount + delta));
   }
   const postPrayBtn = document.getElementById('postPrayBtn');
   const postPrayBtnText = document.getElementById('postPrayBtnText');
@@ -1881,7 +1821,6 @@
     postLightboxDate.textContent = formatDate(post.date);
     postLightboxTitle.textContent = post.title || '';
     postLightboxSummary.textContent = post.summary || '';
-    renderShareRow(post);
     renderPrayButton(post);
     postLightboxOverlay.classList.add('open');
     lockBodyScroll();
