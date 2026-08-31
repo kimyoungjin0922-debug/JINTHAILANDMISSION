@@ -1176,7 +1176,7 @@
     <div class="post-lightbox-date" id="postLightboxDate"></div>
     <h3 id="postLightboxTitle"></h3>
     <p id="postLightboxSummary"></p>
-    <div class="post-pray-block">
+    <div class="post-pray-block" id="postPrayBlock">
       <button class="post-pray-btn" id="postPrayBtn" type="button">
         <span class="pray-icon">🙏</span><span id="postPrayBtnText">기도하겠습니다</span>
       </button>
@@ -1243,7 +1243,7 @@
         </div>
         <!-- [수정] 250만원의 의미(기준액이지 목표가 아님)와 추가 비용 발생 가능성을 안내하는 문구 신규 추가 -->
         <p class="progress-note">
-          ※ 250만원은 태국 선교 초기 정착과 언어·문화 적응을 위한 총회 기준 최소 기본 생활비입니다. 실제 선교지에서는 항공료, 현지 이동·탐방비, 의료비 및 예기치 않은 상황에 따른 추가 비용 등이 발생할 수 있습니다. 정기후원은 기본 생활을 위한 기반이 되며, 특별한 필요가 발생할 경우를 대비하여 후원금액은 최소금액(250)을 초과할 수 있습니다. 
+          ※ 250만원은 태국 선교 초기 정착과 언어·문화 적응을 위한 총회 기준 최소 기본 생활비입니다. 실제 선교지에서는 항공료, 현지 이동·탐방비, 의료비 및 예기치 않은 상황에 따른 추가 비용 등이 발생할 수 있습니다. 정기후원은 기본 생활을 위한 기반이 되며, 특별한 필요가 발생할 경우 별도의 기도와 후원을 요청드릴 수 있습니다.
         </p>
       </div>
       <!-- 오른쪽: 목적 선교헌금 (신규 개선 — 사역별 카드 리스트로 확장) -->
@@ -1855,6 +1855,9 @@
   const postPrayBtn = document.getElementById('postPrayBtn');
   const postPrayBtnText = document.getElementById('postPrayBtnText');
   const postPrayHint = document.getElementById('postPrayHint');
+  const postPrayBlock = document.getElementById('postPrayBlock');
+  // [수정] "선교사 훈련 과정", "선교 이야기" 글에서는 기도하기 버튼을 표시하지 않음 (나머지 카테고리는 그대로 유지)
+  const PRAY_BTN_EXCLUDED_CATEGORIES = ['선교사 훈련 과정', '선교 이야기'];
   let currentLightboxPost = null;
   function applyPrayButtonState(prayed) {
     postPrayBtn.classList.toggle('prayed', prayed);
@@ -1866,12 +1869,19 @@
   function renderPrayButton(post) {
     if (!postPrayBtn) return;
     currentLightboxPost = post;
+    // [수정] 제외 카테고리면 버튼 블록 자체를 숨기고, 클릭도 동작하지 않도록 처리
+    if (postPrayBlock) {
+      const hide = PRAY_BTN_EXCLUDED_CATEGORIES.includes(post.category);
+      postPrayBlock.style.display = hide ? 'none' : '';
+    }
     const prayed = !!(post.id && getPrayedPostIds().includes(post.id));
     applyPrayButtonState(prayed);
   }
   if (postPrayBtn) {
     postPrayBtn.addEventListener('click', () => {
       if (!currentLightboxPost || !currentLightboxPost.id) return;
+      // [수정] 버튼이 숨겨진 카테고리에서는 클릭이 동작하지 않도록 방지
+      if (PRAY_BTN_EXCLUDED_CATEGORIES.includes(currentLightboxPost.category)) return;
       const wasPrayed = postPrayBtn.classList.contains('prayed');
       const nowPrayed = !wasPrayed;
       setPostPrayed(currentLightboxPost.id, nowPrayed);
