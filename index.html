@@ -288,6 +288,9 @@
   .profile-info-card h5{font-size:12.5px;font-weight:800;color:var(--orange-deep);margin-bottom:10px;letter-spacing:.02em;}
   .profile-info-card ul{list-style:none;}
   .profile-info-card li{font-size:12.5px;color:var(--ink);line-height:1.8;}
+  /* [수정] "학력"/"경력" 항목을 굵고 한 치수 크게 만들어 목록 안에서 구분되도록 함 */
+  .profile-info-card li.pf-section-label{font-size:13.5px;font-weight:800;color:var(--navy);margin-top:6px;}
+  .profile-info-card li.pf-section-label:first-child{margin-top:0;}
   .profile-info-card p{font-size:12.5px;color:var(--ink);line-height:1.75;}
   .profile-info-card--support{background:var(--navy);}
   .profile-info-card--support h5{color:#fff;}
@@ -1012,12 +1015,12 @@
         <div class="profile-info-card">
           <h5>학력 및 경력(김영진 목사)</h5>
           <ul>
-            <li>학력</li>
+            <li class="pf-section-label">학력</li>
             <li>호남신학대학교(Th.B)</li>
             <li>호남신학대학교 신대원(M.Div)</li>
             <li>스포츠과학대학원(단국대) 수료</li>
             
-            <li>경력</li>
+            <li class="pf-section-label">경력</li>
             <li>광주&순천&해남 교회 교육전도사</li>
             <li>오산 큰은혜교회 전임전도사</li> 
             <li>상무대교회 부목사</li> 
@@ -1031,11 +1034,11 @@
         <div class="profile-info-card">
           <h5>학력 및 경력(박은신 전도사)</h5>
           <ul>
-            <li>학력</li>
+            <li class="pf-section-label">학력</li>
             <li>경남대학교 심리학과(B.A)</li>
             <li>호남신학대학교 신대원(M.div)</li>
             
-            <li>경력</li>
+            <li class="pf-section-label">경력</li>
             <li>스리랑카 YWAM(선교베이스개척/선교사훈련학교)</li>
             <li>시청 계약직, 경리, 원어민 영어학원 보조강사 등)</li>
             <li>예수전도단 순천지부</li>
