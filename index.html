@@ -3,6 +3,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>김&박 선교사의 태국 선교 이야기</title>
+<!--
+  [수정] 카카오톡/페이스북 등에 홈페이지 링크를 보낼 때 사진이 함께 뜨도록 Open Graph 태그 추가.
+  ⚠️ 꼭 해주셔야 할 일: 부부 사진 파일(예: og-image.jpg, 가로가 긴 1200x630 비율 권장)을
+  이 index.html과 같은 위치(저장소 최상위 폴더)에 실제로 업로드해주세요.
+  그래야 아래 og:image 주소(https://jinthaimission.com/og-image.jpg)에서 실제로 사진을 불러올 수 있습니다.
+  (카카오톡 등 미리보기는 실제 브라우저가 아니라 "링크만 보고 사진을 가져가는 방식"이라
+   지금처럼 사진이 페이지 안에만 있고 별도 파일로 존재하지 않으면 사진이 뜨지 않습니다.)
+-->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="김&박 선교사의 태국 선교 이야기">
+<meta property="og:title" content="김&박 선교사의 태국 선교 이야기">
+<meta property="og:description" content="함께 기도하며, 함께 복음을 전합니다. 태국 이산 지역에서 써내려가는 선교 이야기를 만나보세요.">
+<meta property="og:url" content="https://jinthaimission.com/">
+<meta property="og:image" content="https://jinthaimission.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="김&박 선교사의 태국 선교 이야기">
+<meta name="twitter:description" content="함께 기도하며, 함께 복음을 전합니다. 태국 이산 지역에서 써내려가는 선교 이야기를 만나보세요.">
+<meta name="twitter:image" content="https://jinthaimission.com/og-image.jpg">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
@@ -233,6 +253,17 @@
   @media (max-width:480px){ .post-continue-grid{grid-template-columns:1fr;} }
   .menu-toggle span{display:block;width:23px;height:2px;background:#fff;margin:5px 0;transition:.3s;}
   header.scrolled .menu-toggle span{background:var(--navy);}
+
+  /* ===== 부부 사진 확대 보기 (PCK총회 파송 선교사 배지 클릭 시) ===== */
+  .photo-lightbox-overlay{
+    position:fixed;inset:0;z-index:330;background:rgba(8,30,38,.82);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
+  .photo-lightbox-overlay.open{opacity:1;pointer-events:auto;}
+  .photo-lightbox-inner{position:relative;max-width:520px;width:100%;}
+  .photo-lightbox-inner img{width:100%;border-radius:18px;display:block;box-shadow:0 20px 50px rgba(0,0,0,.4);}
+  .photo-lightbox-inner .donate-close{position:absolute;top:-14px;right:-14px;background:#fff;}
 
   /* ===== Profile Modal ===== */
   .profile-overlay{
@@ -1000,6 +1031,14 @@
         <button class="donate-btn-full blue donate-copy-btn" data-copy="351-0435-4009-73">계좌번호 복사하기</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- [수정] "PCK총회 파송 선교사" 배지를 누르면 뜨는 부부 사진 확대 보기 -->
+<div class="photo-lightbox-overlay" id="photoLightboxOverlay">
+  <div class="photo-lightbox-inner">
+    <button class="donate-close" id="photoLightboxClose" aria-label="닫기">✕</button>
+    <img id="photoLightboxImg" src="" alt="김영진 · 박은신 선교사 부부">
   </div>
 </div>
 
@@ -1800,9 +1839,24 @@
   }
   const visionBadge = document.getElementById('visionBadge');
   const visionBtn = document.getElementById('visionBtn');
+  // [수정] "PCK총회 파송 선교사" 배지는 비전검증문이 아니라 부부 사진이 크게 뜨도록 변경
+  const photoLightboxOverlay = document.getElementById('photoLightboxOverlay');
+  const photoLightboxImg = document.getElementById('photoLightboxImg');
+  const photoLightboxClose = document.getElementById('photoLightboxClose');
+  function openPhotoLightbox() {
+    const heroImg = document.querySelector('.hero-card img');
+    if (heroImg && photoLightboxImg) photoLightboxImg.src = heroImg.src;
+    photoLightboxOverlay.classList.add('open');
+    lockBodyScroll();
+  }
+  if (photoLightboxClose) {
+    photoLightboxClose.addEventListener('click', () => { photoLightboxOverlay.classList.remove('open'); unlockBodyScroll(); });
+  }
+  if (photoLightboxOverlay) {
+    photoLightboxOverlay.addEventListener('click', (e) => { if (e.target === photoLightboxOverlay) { photoLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
+  }
   if (visionBadge) {
-    visionBadge.addEventListener('mouseenter', () => { if (visionPost) prefetchPostDetail(visionPost); });
-    visionBadge.addEventListener('click', openVisionDoc);
+    visionBadge.addEventListener('click', openPhotoLightbox);
   }
   if (visionBtn) {
     visionBtn.addEventListener('mouseenter', () => { if (visionPost) prefetchPostDetail(visionPost); });
