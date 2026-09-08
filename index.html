@@ -517,6 +517,53 @@
     transform:translateY(16px);transition:transform .25s ease;
   }
   .post-lightbox-overlay.open .post-lightbox-modal{transform:translateY(0);}
+  /* [수정] 글별 공유 버튼 (닫기 버튼 옆) */
+  .post-share-trigger{
+    position:absolute;top:18px;right:60px;display:flex;align-items:center;gap:5px;
+    background:var(--bg-alt);border:none;border-radius:100px;padding:7px 14px;
+    font-size:12.5px;font-weight:700;color:var(--navy);cursor:pointer;transition:background .2s;
+    z-index:5;
+  }
+  .post-share-trigger:hover{background:var(--sand-line);}
+  .post-share-trigger svg{width:13px;height:13px;}
+  /* [수정] 공유 모달 — 카카오톡/페이스북/인스타그램/Threads/링크복사 */
+  .share-modal-overlay{
+    position:fixed;inset:0;z-index:340;background:rgba(8,30,38,.72);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
+  .share-modal-overlay.open{opacity:1;pointer-events:auto;}
+  .share-modal{
+    background:#fff;border-radius:22px;max-width:420px;width:100%;padding:30px 26px 26px;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);position:relative;
+    transform:translateY(16px);transition:transform .25s ease;
+  }
+  .share-modal-overlay.open .share-modal{transform:translateY(0);}
+  .share-modal-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.14em;color:var(--orange-deep);margin-bottom:10px;}
+  .share-modal h3{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:6px;line-height:1.4;}
+  .share-modal-post-title{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:22px;}
+  .share-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+  .share-option{
+    display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:14px;border:none;
+    cursor:pointer;text-align:left;transition:filter .18s, transform .18s;
+  }
+  .share-option:hover{filter:brightness(0.96);transform:translateY(-1px);}
+  .share-option-icon{font-size:26px;line-height:1;flex-shrink:0;}
+  .share-option-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .share-option-text strong{font-size:13.5px;font-weight:800;}
+  .share-option-text small{font-size:11px;opacity:.85;}
+  /* [수정] 서비스별 색을 진하고 선명하게 구분 */
+  .share-option.kakao{background:#FEE500;color:#391B1B;}
+  .share-option.facebook{background:#1877F2;color:#fff;}
+  .share-option.instagram{background:linear-gradient(135deg,#F58529,#DD2A7B,#8134AF);color:#fff;}
+  .share-option.threads{background:#000;color:#fff;}
+  .share-copy-link{
+    display:block;width:100%;text-align:center;background:none;border:none;padding:10px;
+    font-size:13px;font-weight:700;color:var(--ink-soft);cursor:pointer;transition:color .18s;
+  }
+  .share-copy-link:hover{color:var(--navy);}
+  .share-copy-link.copied{color:var(--orange-deep);}
+  @media (max-width:420px){ .share-modal-grid{grid-template-columns:1fr;} }
   .post-lightbox-images{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;border-radius:14px;overflow:hidden;}
   .post-lightbox-images img{width:100%;border-radius:14px;display:block;}
   .post-lightbox-date{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:8px;letter-spacing:.03em;}
@@ -1206,6 +1253,10 @@
 
 <div class="post-lightbox-overlay" id="postLightboxOverlay">
   <div class="post-lightbox-modal">
+    <button type="button" class="post-share-trigger" id="postShareTrigger" aria-label="공유">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 14v5a2 2 0 002 2h10a2 2 0 002-2v-5"/></svg>
+      <span>공유</span>
+    </button>
     <button class="donate-close" id="postLightboxClose" aria-label="닫기">✕</button>
     <div class="post-lightbox-video" id="postLightboxVideo" style="display:none;">
       <iframe id="postLightboxVideoFrame" src="" title="영상" allowfullscreen></iframe>
@@ -1228,6 +1279,34 @@
   </div>
 </div>
 
+<!-- [수정] 글별 공유 모달 — 카카오톡/페이스북/인스타그램/Threads/링크복사 -->
+<div class="share-modal-overlay" id="shareModalOverlay">
+  <div class="share-modal">
+    <button class="donate-close" id="shareModalClose" aria-label="닫기">✕</button>
+    <div class="share-modal-eyebrow">SHARE</div>
+    <h3>이 글을 어디로 공유할까요?</h3>
+    <p class="share-modal-post-title" id="shareModalPostTitle"></p>
+    <div class="share-modal-grid">
+      <button type="button" class="share-option kakao" data-share="kakao">
+        <span class="share-option-icon">💬</span>
+        <span class="share-option-text"><strong>KakaoTalk</strong><small>카카오톡으로 공유</small></span>
+      </button>
+      <button type="button" class="share-option facebook" data-share="facebook">
+        <span class="share-option-icon">📘</span>
+        <span class="share-option-text"><strong>Facebook</strong><small>Facebook에 공유</small></span>
+      </button>
+      <button type="button" class="share-option instagram" data-share="instagram">
+        <span class="share-option-icon">📷</span>
+        <span class="share-option-text"><strong>Instagram</strong><small>링크 복사 후 Instagram</small></span>
+      </button>
+      <button type="button" class="share-option threads" data-share="threads">
+        <span class="share-option-icon">🧵</span>
+        <span class="share-option-text"><strong>Threads</strong><small>Threads에 공유</small></span>
+      </button>
+    </div>
+    <button type="button" class="share-copy-link" id="shareCopyLink">링크만 복사</button>
+  </div>
+</div>
 
 <div class="category-overlay" id="categoryOverlay">
   <div class="category-modal">
@@ -2028,6 +2107,70 @@
   postLightboxClose.addEventListener('click', () => { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); });
   postLightboxOverlay.addEventListener('click', (e) => { if (e.target === postLightboxOverlay) { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
+
+  // [수정] ===== 글별 공유 모달 =====
+  function buildShareUrl(post) {
+    // 노션 글은 별도 URL이 없으므로 홈페이지 주소 + 글 id로 공유 링크를 구성합니다.
+    const base = location.origin + location.pathname;
+    return post && post.id ? base + '#post-' + encodeURIComponent(post.id) : base;
+  }
+  const postShareTrigger = document.getElementById('postShareTrigger');
+  const shareModalOverlay = document.getElementById('shareModalOverlay');
+  const shareModalClose = document.getElementById('shareModalClose');
+  const shareModalPostTitle = document.getElementById('shareModalPostTitle');
+  const shareCopyLink = document.getElementById('shareCopyLink');
+
+  function openShareModal() {
+    if (!currentLightboxPost) return;
+    shareModalPostTitle.textContent = currentLightboxPost.title || '';
+    shareModalOverlay.classList.add('open');
+  }
+  function closeShareModal() { shareModalOverlay.classList.remove('open'); }
+
+  if (postShareTrigger) postShareTrigger.addEventListener('click', openShareModal);
+  if (shareModalClose) shareModalClose.addEventListener('click', closeShareModal);
+  if (shareModalOverlay) {
+    shareModalOverlay.addEventListener('click', (e) => { if (e.target === shareModalOverlay) closeShareModal(); });
+  }
+
+  document.querySelectorAll('.share-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!currentLightboxPost) return;
+      const url = buildShareUrl(currentLightboxPost);
+      const title = currentLightboxPost.title || '태국 선교 이야기';
+      const type = btn.getAttribute('data-share');
+
+      if (type === 'facebook') {
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank', 'noopener,noreferrer');
+      } else if (type === 'threads') {
+        window.open('https://www.threads.net/intent/post?text=' + encodeURIComponent(title + ' ' + url), '_blank', 'noopener,noreferrer');
+      } else if (type === 'kakao' || type === 'instagram') {
+        // 카카오톡/인스타그램은 별도 앱 API 키 없이는 자동으로 대화방/게시물에 붙여넣을 수 없어서,
+        // 링크를 복사해드리고 해당 앱에 직접 붙여넣도록 안내합니다.
+        navigator.clipboard?.writeText(title + ' ' + url).then(() => {
+          const small = btn.querySelector('small');
+          if (small) {
+            const original = small.textContent;
+            small.textContent = '링크가 복사되었어요!';
+            setTimeout(() => { small.textContent = original; }, 1800);
+          }
+        });
+      }
+    });
+  });
+
+  if (shareCopyLink) {
+    shareCopyLink.addEventListener('click', () => {
+      if (!currentLightboxPost) return;
+      const url = buildShareUrl(currentLightboxPost);
+      navigator.clipboard?.writeText(url).then(() => {
+        shareCopyLink.classList.add('copied');
+        const original = shareCopyLink.textContent;
+        shareCopyLink.textContent = '링크가 복사되었습니다!';
+        setTimeout(() => { shareCopyLink.classList.remove('copied'); shareCopyLink.textContent = original; }, 1800);
+      });
+    });
+  }
 
   // 페이지 로드 시 노션에서 소식 불러오기 (백엔드가 노션 API를 대신 호출해줌) — 각 카테고리별 최신 3개만 표시
   if (SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
