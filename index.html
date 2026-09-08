@@ -1390,12 +1390,12 @@
           <!-- [수정] "현재 모금액" → "현재 정기후원 약정" 표현으로 변경 -->
           <span>현재 정기후원 약정 <strong>2,52,000원</strong></span>
           <!-- [수정] +0.8% = +20,000원 ÷ 2,520,000원 × 100.8 -->
-          <span>부족액 <strong>1.2%</strong></span>
+          <span>최소금액 초과액 <strong>0.8%</strong></span>
         </div>
         <div class="progress-remain">
           <!-- [수정] "남은 목표액" → "기준액까지 남은 금액"으로 의미를 명확히 표현 -->
           <span>기준액까지 남은 금액</span>
-          <strong>200,000원 초과</strong>
+          <strong>20,000원 초과</strong>
         </div>
         <!-- [수정] 250만원의 의미(기준액이지 목표가 아님)와 추가 비용 발생 가능성을 안내하는 문구 -->
         <p class="progress-note">
@@ -2492,8 +2492,8 @@
   }
 
   // progress bar animate on view
-  // [수정] 90.8% → 98.8% (2,470,000원 ÷ 2,500,000원 × 100)
-  const targetPct = 98.8;
+  // [수정] 98.8% → 100.8% ((2,520,000원 ÷ 2,500,000원 × 100 = 100.8%))
+  const targetPct = 100.8;
   const fill = document.getElementById('progressFill');
   const pctNum = document.getElementById('pctNum');
   const progressObserver = new IntersectionObserver((entries) => {
