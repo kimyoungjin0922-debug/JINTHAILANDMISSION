@@ -1613,6 +1613,7 @@
 
 <script>
   let visionPost = null;
+  let pckPost = null; // [수정] 노션 "PCK 총회 선교사" 카테고리 글
   function lockBodyScroll(){ document.body.style.overflow = 'hidden'; }
   function unlockBodyScroll(){ document.body.style.overflow = ''; }
   // ▼▼▼ 아래 SCRIPT_URL 자리에 배포받은 웹 앱 주소를 붙여넣으면 실제 저장/메일 발송이 작동합니다.
@@ -1839,24 +1840,17 @@
   }
   const visionBadge = document.getElementById('visionBadge');
   const visionBtn = document.getElementById('visionBtn');
-  // [수정] "PCK 총회 선교사" 배지는 비전검증문이 아니라 부부 사진이 크게 뜨도록 변경
-  const photoLightboxOverlay = document.getElementById('photoLightboxOverlay');
-  const photoLightboxImg = document.getElementById('photoLightboxImg');
-  const photoLightboxClose = document.getElementById('photoLightboxClose');
-  function openPhotoLightbox() {
-    const heroImg = document.querySelector('.hero-card img');
-    if (heroImg && photoLightboxImg) photoLightboxImg.src = heroImg.src;
-    photoLightboxOverlay.classList.add('open');
-    lockBodyScroll();
-  }
-  if (photoLightboxClose) {
-    photoLightboxClose.addEventListener('click', () => { photoLightboxOverlay.classList.remove('open'); unlockBodyScroll(); });
-  }
-  if (photoLightboxOverlay) {
-    photoLightboxOverlay.addEventListener('click', (e) => { if (e.target === photoLightboxOverlay) { photoLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
+  // [수정] "PCK 총회 선교사" 배지 — 노션 "PCK 총회 선교사" 카테고리와 연결되어 사진+글을 함께 보여줌
+  function openPckDoc() {
+    if (pckPost) {
+      openPostLightbox(pckPost);
+    } else {
+      alert('PCK 총회 선교사 글이 아직 노션에 등록되지 않았습니다.');
+    }
   }
   if (visionBadge) {
-    visionBadge.addEventListener('click', openPhotoLightbox);
+    visionBadge.addEventListener('mouseenter', () => { if (pckPost) prefetchPostDetail(pckPost); });
+    visionBadge.addEventListener('click', openPckDoc);
   }
   if (visionBtn) {
     visionBtn.addEventListener('mouseenter', () => { if (visionPost) prefetchPostDetail(visionPost); });
@@ -2244,12 +2238,14 @@
         renderLane('laneDaily', dailyPosts);
         renderPrayerLetters(letterPosts);
         visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
+        pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
         handleGalleryHash(); // 주소창에 #gallery/카테고리명 이 있으면 바로 전체보기를 열어줌
 
         // 화면에 보이는 글들을 페이지 로드 직후 순서대로 미리 불러와서 클릭 시 버퍼링 없이 뜨도록 함
         autoPrefetchAll([
           journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
-          visionPost ? [visionPost] : []
+          visionPost ? [visionPost] : [],
+          pckPost ? [pckPost] : []
         ]);
       })
       .catch(() => {
