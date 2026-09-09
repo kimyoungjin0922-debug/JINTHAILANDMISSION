@@ -1844,8 +1844,9 @@
   const photoLightboxImg = document.getElementById('photoLightboxImg');
   const photoLightboxClose = document.getElementById('photoLightboxClose');
   function openPhotoLightbox() {
-    const heroImg = document.querySelector('.hero-card img');
-    if (heroImg && photoLightboxImg) photoLightboxImg.src = heroImg.src;
+    // [수정] 예전에는 히어로 섹션 사진(태국 배경)을 그대로 재사용했는데,
+    // 이 배지를 누르면 별도로 업로드해주신 사진(og-image.jpg, 공원 배경)이 뜨도록 변경했습니다.
+    if (photoLightboxImg) photoLightboxImg.src = 'og-image.jpg';
     photoLightboxOverlay.classList.add('open');
     lockBodyScroll();
   }
