@@ -1093,7 +1093,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"/></svg>
           </div>
           <h4>파송</h4>
-          <p>대한예수교장로회(통합)<br>총회(PCK) 선교사</p>
+          <p>대한예수교장로회(통합)<br>총회(PCK) 파송 선교사</p>
         </div>
       </div>
 
@@ -1138,7 +1138,7 @@
           </ul>
         </div>
         <div class="profile-info-card">
-          <h5>가족소개</h5>
+          <h5>가족소개(부부)</h5>
           <ul>
             <li>김영진 선교사</li>
             <li>박은신 선교사</li>
@@ -1844,8 +1844,8 @@
   const photoLightboxImg = document.getElementById('photoLightboxImg');
   const photoLightboxClose = document.getElementById('photoLightboxClose');
   function openPhotoLightbox() {
-    const profilePhoto = document.querySelector('.profile-top-photo img');
-    if (profilePhoto && photoLightboxImg) photoLightboxImg.src = profilePhoto.src;
+    const heroImg = document.querySelector('.hero-card img');
+    if (heroImg && photoLightboxImg) photoLightboxImg.src = heroImg.src;
     photoLightboxOverlay.classList.add('open');
     lockBodyScroll();
   }
