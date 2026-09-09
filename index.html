@@ -364,7 +364,7 @@
   .hero h1.calligraphy{
     font-family:'Nanum Brush Script', cursive;
     font-weight:400;
-    font-size:clamp(46px,8.2vw,86px);
+    font-size:clamp(42px,6vw,48px);
     line-height:1.35;
     letter-spacing:.01em;
     text-shadow:0 10px 30px rgba(0,0,0,.35);
@@ -1093,7 +1093,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"/></svg>
           </div>
           <h4>파송</h4>
-          <p>대한예수교장로회(통합)<br>총회(PCK) 선교사</p>
+          <p>대한예수교장로회(통합)<br>총회(PCK) 파송 선교사</p>
         </div>
       </div>
 
@@ -1113,7 +1113,7 @@
             <li>새문안교회 선교대학 수료</li>
             <li>온누리교회(광주) 교육목사</li> 
             <li>PCK 제110회기 75기 총회 파송 선교사 수료 (2026.5.15)</li>           
-            <li>PCK 총회 파송 허입 선교사(파송전)</li>
+            <li>PCK 총회 허입 선교사(파송전)</li>
 
           </ul>
         </div>
@@ -1134,11 +1134,11 @@
             <li>상무대교회 교육전도사</li> 
             <li>새문안교회 선교대학 수료</li>
             <li>PCK 제110회기 75기 총회 파송 선교사 수료</li>           
-            <li>PCK 총회 파송 허입 선교사(파송전)</li>
+            <li>PCK 총회 허입 선교사(파송전)</li>
           </ul>
         </div>
         <div class="profile-info-card">
-          <h5>가족소개</h5>
+          <h5>가족소개(부부)</h5>
           <ul>
             <li>김영진 선교사</li>
             <li>박은신 선교사</li>
@@ -1547,7 +1547,7 @@
 <section class="newsletter" id="letter">
   <div class="newsletter-inner">
     <h2>최신 사역 요약과 기도편지를<br>메일로 받아보세요</h2>
-    <p> 이산 땅의 소식을 정성껏 전해드립니다.</p>
+    <p> 파송예배 전까지는 파송전 과정을 기도편지로 나눕니다.</p>
     <div class="prayer-letter-list" id="prayerLetterList">
       <p class="pl-empty">불러오는 중...</p>
     </div>
@@ -1844,8 +1844,8 @@
   const photoLightboxImg = document.getElementById('photoLightboxImg');
   const photoLightboxClose = document.getElementById('photoLightboxClose');
   function openPhotoLightbox() {
-    const profilePhoto = document.querySelector('.profile-top-photo img');
-    if (profilePhoto && photoLightboxImg) photoLightboxImg.src = profilePhoto.src;
+    const heroImg = document.querySelector('.hero-card img');
+    if (heroImg && photoLightboxImg) photoLightboxImg.src = heroImg.src;
     photoLightboxOverlay.classList.add('open');
     lockBodyScroll();
   }
