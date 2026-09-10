@@ -599,7 +599,27 @@
   .post-lightbox-images img{width:100%;border-radius:14px;display:block;}
   .post-lightbox-date{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:8px;letter-spacing:.03em;}
   #postLightboxTitle{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:10px;padding-right:26px;}
-  #postLightboxSummary{font-size:14px;color:var(--ink-soft);line-height:1.8;white-space:pre-wrap;}
+  #postLightboxSummary{
+    font-size:14px;color:var(--ink-soft);line-height:1.8;white-space:normal;
+    overflow-wrap:anywhere;word-break:break-word;
+  }
+  #postLightboxSummary p{margin:0 0 12px;}
+  #postLightboxSummary p:last-child{margin-bottom:0;}
+  #postLightboxSummary strong,#postLightboxSummary b{font-weight:800;color:var(--ink);}
+  #postLightboxSummary em,#postLightboxSummary i{font-style:italic;}
+  #postLightboxSummary u{text-decoration:underline;text-underline-offset:2px;}
+  #postLightboxSummary s,#postLightboxSummary del{text-decoration:line-through;}
+  #postLightboxSummary a{color:var(--sky);text-decoration:underline;text-underline-offset:2px;}
+  #postLightboxSummary ul,#postLightboxSummary ol{margin:8px 0 14px;padding-left:22px;}
+  #postLightboxSummary li{margin:4px 0;}
+  #postLightboxSummary blockquote{margin:12px 0;padding:10px 14px;border-left:3px solid var(--orange);background:var(--bg-alt);border-radius:0 10px 10px 0;color:var(--ink);}
+  #postLightboxSummary h1,#postLightboxSummary h2,#postLightboxSummary h3{color:var(--navy);line-height:1.45;margin:18px 0 9px;}
+  #postLightboxSummary h1{font-size:20px;} #postLightboxSummary h2{font-size:18px;} #postLightboxSummary h3{font-size:16px;}
+  #postLightboxSummary code{padding:1px 5px;border-radius:5px;background:var(--bg-alt);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;}
+  #postLightboxSummary pre{overflow:auto;padding:12px 14px;border-radius:10px;background:#F3F1EB;margin:10px 0 14px;white-space:pre-wrap;}
+  #postLightboxSummary hr{border:0;border-top:1px solid var(--line);margin:16px 0;}
+  #postLightboxSummary img{width:100%;height:auto;border-radius:12px;margin:10px 0;display:block;}
+  #postLightboxSummary mark{background:#FFF0A8;padding:0 2px;border-radius:2px;}
 
   /* ===== Support / Progress ===== */
   .support{background:var(--bg);}
@@ -1303,7 +1323,7 @@
     <div class="post-lightbox-images" id="postLightboxImages"></div>
     <div class="post-lightbox-date" id="postLightboxDate"></div>
     <h3 id="postLightboxTitle"></h3>
-    <p id="postLightboxSummary"></p>
+    <div id="postLightboxSummary" class="post-lightbox-content"></div>
     <div class="post-pray-block" id="postPrayBlock">
       <button class="post-pray-btn" id="postPrayBtn" type="button">
         <span class="pray-icon">🙏</span><span id="postPrayBtnText">기도하겠습니다</span>
@@ -1943,27 +1963,110 @@
 
   let allPosts = []; // 노션에서 불러온 전체 글 목록 (검색 · 카테고리 전체보기 · 이어보기에서 재사용 — 추가 API 호출 없음)
   const detailCache = new Map(); // 이미 불러온 글의 본문/사진을 저장해서 재클릭 시 즉시 표시
+  const detailPromises = new Map();
+
+  function escapeAttr(str) {
+    return String(str || '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function safeHref(url) {
+    const value = String(url || '').trim();
+    return /^(https?:|mailto:|tel:)/i.test(value) ? value : '';
+  }
+  function sanitizeRichHtml(html) {
+    const t=document.createElement('template'); t.innerHTML=String(html||'');
+    t.content.querySelectorAll('script,style,iframe,object,embed,form,meta,link').forEach(el=>el.remove());
+    t.content.querySelectorAll('*').forEach(el=>{
+      [...el.attributes].forEach(a=>{
+        const n=a.name.toLowerCase(), v=a.value||'';
+        if(n.startsWith('on')||n==='srcdoc') el.removeAttribute(a.name);
+        if((n==='href'||n==='src') && /^\s*javascript:/i.test(v)) el.removeAttribute(a.name);
+      });
+      if(el.tagName==='A'){
+        const href=safeHref(el.getAttribute('href'));
+        if(href){el.setAttribute('href',href);el.setAttribute('target','_blank');el.setAttribute('rel','noopener noreferrer');}
+        else el.removeAttribute('href');
+      }
+    });
+    return t.innerHTML;
+  }
+  function renderNotionRichText(runs) {
+    if(!Array.isArray(runs)) return '';
+    return runs.map(run=>{
+      const textObj=run&&run.text?run.text:run;
+      const text=textObj&&(textObj.content ?? textObj.plain_text ?? run?.plain_text ?? '');
+      const ann=run?.annotations||{}, href=safeHref(run?.href||textObj?.link?.url||'');
+      let out=escapeHtml(text).replace(/\n/g,'<br>');
+      if(ann.code) out='<code>'+out+'</code>';
+      if(ann.bold) out='<strong>'+out+'</strong>';
+      if(ann.italic) out='<em>'+out+'</em>';
+      if(ann.underline) out='<u>'+out+'</u>';
+      if(ann.strikethrough) out='<s>'+out+'</s>';
+      if(href) out='<a href="'+escapeAttr(href)+'" target="_blank" rel="noopener noreferrer">'+out+'</a>';
+      return out;
+    }).join('');
+  }
+  function renderNotionBlocks(blocks) {
+    if(!Array.isArray(blocks)) return '';
+    const html=[]; let listType=null;
+    const closeList=()=>{if(listType){html.push('</'+listType+'>');listType=null;}};
+    blocks.forEach(block=>{
+      const type=block?.type, value=type?block[type]:null; if(!value) return;
+      if(type==='bulleted_list_item'||type==='numbered_list_item'){
+        const wanted=type==='bulleted_list_item'?'ul':'ol';
+        if(listType!==wanted){closeList();html.push('<'+wanted+'>');listType=wanted;}
+        html.push('<li>'+renderNotionRichText(value.rich_text||value.text||[])+'</li>'); return;
+      }
+      closeList();
+      if(type==='paragraph') html.push('<p>'+renderNotionRichText(value.rich_text||value.text||[])+'</p>');
+      else if(type==='heading_1') html.push('<h1>'+renderNotionRichText(value.rich_text||[])+'</h1>');
+      else if(type==='heading_2') html.push('<h2>'+renderNotionRichText(value.rich_text||[])+'</h2>');
+      else if(type==='heading_3') html.push('<h3>'+renderNotionRichText(value.rich_text||[])+'</h3>');
+      else if(type==='quote'||type==='callout') html.push('<blockquote>'+renderNotionRichText(value.rich_text||[])+'</blockquote>');
+      else if(type==='divider') html.push('<hr>');
+      else if(type==='image'){const src=safeHref(value?.external?.url||value?.file?.url||'');if(src)html.push('<img src="'+escapeAttr(src)+'" alt="">');}
+      else if(value.rich_text) html.push('<p>'+renderNotionRichText(value.rich_text)+'</p>');
+    });
+    closeList(); return html.join('');
+  }
+  function renderPostContent(container,data,fallback){
+    const html=data?.contentHtml||data?.html||data?.content_html||
+      (Array.isArray(data?.blocks)?renderNotionBlocks(data.blocks):'')||
+      (Array.isArray(data?.rich_text)?renderNotionRichText(data.rich_text):'');
+    if(html){container.innerHTML=sanitizeRichHtml(html);return;}
+    container.textContent=(data?.content&&String(data.content).trim())?data.content:(fallback||'');
+  }
 
   function prefetchPostDetail(post) {
-    if (!post.id || detailCache.has(post.id)) return;
-    if (!SUBSCRIBE_SCRIPT_URL || SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') !== -1) return;
-    detailCache.set(post.id, 'loading'); // 중복 요청 방지용 임시 표시
-    fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
-      .then(res => res.json())
-      .then(data => {
-        detailCache.set(post.id, data);
-        // 본문 사진도 실제로 미리 다운로드해서 브라우저에 캐시해둠 (클릭 시 즉시 표시)
-        (data.images || []).forEach(src => { const im = new Image(); im.src = src; });
+    if (!post.id) return Promise.resolve(null);
+    if (detailCache.has(post.id) && detailCache.get(post.id) !== 'loading') return Promise.resolve(detailCache.get(post.id));
+    if (detailPromises.has(post.id)) return detailPromises.get(post.id);
+    if (!SUBSCRIBE_SCRIPT_URL || SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') !== -1) return Promise.resolve(null);
+
+    detailCache.set(post.id, 'loading');
+    const promise=fetch(SUBSCRIBE_SCRIPT_URL+'?type=notion-content&id='+encodeURIComponent(post.id),{cache:'default'})
+      .then(res=>{if(!res.ok)throw new Error('본문을 불러오지 못했습니다.');return res.json();})
+      .then(data=>{
+        detailCache.set(post.id,data);
+        [].concat(post.images||[]).concat(data.images||[]).filter(Boolean)
+          .filter((src,i,a)=>a.indexOf(src)===i).forEach(src=>{
+            const im=new Image(); im.decoding='async'; im.fetchPriority='high'; im.src=src;
+          });
+        return data;
       })
-      .catch(() => { detailCache.delete(post.id); });
+      .catch(err=>{detailCache.delete(post.id);throw err;})
+      .finally(()=>detailPromises.delete(post.id));
+    detailPromises.set(post.id,promise);
+    return promise;
   }
 
   function autoPrefetchAll(postLists) {
-    // 화면에 보이는 글들을 페이지 로드 직후 순서대로 조금씩 미리 불러옴 (서버에 한꺼번에 몰리지 않도록 간격을 둠)
-    const all = [].concat(...postLists).filter(p => p && p.id);
-    all.forEach((post, i) => {
-      setTimeout(() => prefetchPostDetail(post), i * 250);
-    });
+    const all=[...new Map([].concat(...postLists).filter(p=>p&&p.id).map(p=>[p.id,p])).values()];
+    const runBatch=start=>{
+      const batch=all.slice(start,start+4);
+      if(!batch.length)return;
+      Promise.allSettled(batch.map(prefetchPostDetail)).finally(()=>runBatch(start+4));
+    };
+    runBatch(0);
   }
 
   function renderLane(elId, posts) {
@@ -1985,7 +2088,9 @@
         const img = document.createElement('img');
         img.src = post.images[0];
         img.alt = post.title || '';
-        img.loading = 'eager';
+        img.loading = i < 3 ? 'eager' : 'lazy';
+        img.decoding = 'async';
+        if (i < 3) img.fetchPriority = 'high';
         thumb.appendChild(img);
       } else if (post.video) {
         const img = document.createElement('img');
@@ -2096,62 +2201,54 @@
   }
 
   function applyPostDetail(post, data) {
-    postLightboxSummary.textContent = (data.content && data.content.trim()) ? data.content : (post.summary || '');
-    if (!post.video && data.images && data.images.length) {
-      data.images.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = post.title || '';
-        postLightboxImages.appendChild(img);
+    renderPostContent(postLightboxSummary,data,post.summary||'');
+    if(!post.video&&data.images&&data.images.length){
+      const existing=new Set((post.images||[]).filter(Boolean));
+      data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
+        const img=document.createElement('img');img.src=src;img.alt=post.title||'';
+        img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
       });
     }
   }
 
   function openPostLightbox(post) {
-    postLightboxImages.innerHTML = '';
-    if (post.video) {
-      // 영상 글: 이미지 대신 유튜브 임베드를 보여줌
-      postLightboxVideo.style.display = '';
-      postLightboxVideoFrame.src = 'https://www.youtube.com/embed/' + encodeURIComponent(post.video);
-      postLightboxImages.style.display = 'none';
-    } else {
-      postLightboxVideo.style.display = 'none';
-      postLightboxVideoFrame.src = '';
-      postLightboxImages.style.display = '';
-      (post.images || []).forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = post.title || '';
-        postLightboxImages.appendChild(img);
+    postLightboxImages.innerHTML='';
+    if(post.video){
+      postLightboxVideo.style.display='';
+      postLightboxVideoFrame.src='https://www.youtube.com/embed/'+encodeURIComponent(post.video);
+      postLightboxImages.style.display='none';
+    }else{
+      postLightboxVideo.style.display='none';
+      postLightboxVideoFrame.src='';
+      postLightboxImages.style.display='';
+      (post.images||[]).forEach(src=>{
+        const img=document.createElement('img');img.src=src;img.alt=post.title||'';
+        img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
       });
     }
-    postLightboxDate.textContent = formatDate(post.date);
-    postLightboxTitle.textContent = post.title || '';
-    postLightboxSummary.textContent = post.summary || '';
+    postLightboxDate.textContent=formatDate(post.date);
+    postLightboxTitle.textContent=post.title||'';
+    postLightboxSummary.textContent=post.summary||'';
     renderPrayButton(post);
     postLightboxOverlay.classList.add('open');
     lockBodyScroll();
     renderPostContinue(post);
 
-    // 노션 페이지의 전체 본문 내용 + 본문에 넣은 추가 사진 — 이미 미리 불러와 둔 게 있으면 바로 표시(버퍼링 없음)
-    const cached = post.id ? detailCache.get(post.id) : null;
-    if (cached && cached !== 'loading') {
-      applyPostDetail(post, cached);
-    } else if (post.id && SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
-      postLightboxSummary.textContent = (post.summary ? post.summary + '\n\n' : '') + '본문을 불러오는 중...';
-      fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion-content&id=' + encodeURIComponent(post.id))
-        .then(res => res.json())
-        .then(data => {
-          detailCache.set(post.id, data);
-          (data.images || []).forEach(src => { const im = new Image(); im.src = src; });
-          applyPostDetail(post, data);
-        })
-        .catch(() => {
-          detailCache.delete(post.id);
-          postLightboxSummary.textContent = post.summary || '';
-        });
+    const cached=post.id?detailCache.get(post.id):null;
+    if(cached&&cached!=='loading'){
+      applyPostDetail(post,cached);
+    }else if(post.id&&SUBSCRIBE_SCRIPT_URL&&SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR')===-1){
+      postLightboxSummary.textContent=(post.summary?post.summary+'\n\n':'')+'본문을 불러오는 중...';
+      prefetchPostDetail(post).then(data=>{
+        if(currentLightboxPost!==post)return;
+        applyPostDetail(post,data||{});
+      }).catch(()=>{
+        if(currentLightboxPost!==post)return;
+        postLightboxSummary.textContent=post.summary||'';
+      });
     }
   }
+
   postLightboxClose.addEventListener('click', () => { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); });
   postLightboxOverlay.addEventListener('click', (e) => { if (e.target === postLightboxOverlay) { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
