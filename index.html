@@ -1426,7 +1426,7 @@
           ※ 월 250만원은 태국 선교 초기 정착과 언어·문화 적응을 위한 총회 기준 최소 기본 생활비입니다. 실제 선교지에서는 항공료, 현지 이동·탐방비, 의료비 및 예기치 않은 상황에 따른 추가 비용 등이 발생할 수 있습니다.
         </p>
         <!-- [수정] 초과 후원금의 투명한 사용 안내 — 클릭하면 아래에 자세한 설명이 펼쳐짐 -->
-        <button type="button" class="donate-btn-full orange" id="excessFundToggle" style="margin-top:14px;">
+        <button type="button" class="donate-btn-full orange" id="excessFundToggle" style="margin-top:14px;" onclick="toggleExcessFundDetail(event)">
           <span id="excessFundToggleText">초과된 후원금은 아래와 같이 투명하게 활용됩니다.</span>
         </button>
         <div class="progress-extra-detail" id="excessFundDetail">
@@ -2766,16 +2766,23 @@
       });
     });
   }
-  renderPurposeFunds();
-
-  // [수정] "초과된 후원금은 아래와 같이 투명하게 활용됩니다." 버튼 — 클릭 시 페이지 이동 없이 아래에 설명이 펼쳐짐
-  const excessFundToggle = document.getElementById('excessFundToggle');
-  const excessFundDetail = document.getElementById('excessFundDetail');
-  if (excessFundToggle && excessFundDetail) {
-    excessFundToggle.addEventListener('click', () => {
-      excessFundDetail.classList.toggle('open');
-    });
+  // [수정] 초과 후원금 안내는 다른 렌더링 오류가 있어도 독립적으로 작동하도록 처리
+  function toggleExcessFundDetail(event) {
+    if (event) event.preventDefault();
+    const detail = document.getElementById('excessFundDetail');
+    const btn = document.getElementById('excessFundToggle');
+    if (!detail) return;
+    const isOpen = detail.classList.toggle('open');
+    if (btn) btn.classList.toggle('open', isOpen);
   }
+  window.toggleExcessFundDetail = toggleExcessFundDetail;
+
+  const excessFundToggle = document.getElementById('excessFundToggle');
+  if (excessFundToggle) {
+    excessFundToggle.addEventListener('click', toggleExcessFundDetail);
+  }
+
+  renderPurposeFunds();
 
   // guestbook: 저장 + 실시간 표시 (Google Sheets 백엔드 연결)
   function makeStickyNote(text, name) {
