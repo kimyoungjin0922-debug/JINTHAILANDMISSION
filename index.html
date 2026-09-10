@@ -493,9 +493,12 @@
   .photo-wall-section{padding:80px 6vw;background:var(--bg);}
   .photo-wall-section.alt{background:var(--bg-alt);}
   .wall-title{
-    font-size:22px;font-weight:800;color:var(--navy);margin-bottom:28px;
+    font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px;
     display:flex;align-items:center;gap:10px;
   }
+  .wall-description{font-size:14px;color:var(--ink-soft);line-height:1.7;margin:0 0 26px 15px;}
+  .hero-mission-line{max-width:720px;margin:0 auto 28px;text-align:center;font-size:16px;font-weight:700;color:var(--navy);line-height:1.75;}
+  .prayer-counter-note{margin-top:10px;font-size:12.5px;color:var(--ink-soft);line-height:1.7;}
   .wall-title::before{
     content:"";width:5px;height:20px;border-radius:3px;
     background:linear-gradient(180deg,var(--sky),var(--orange));display:inline-block;
@@ -1113,7 +1116,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"/></svg>
           </div>
           <h4>파송</h4>
-          <p>대한예수교장로회(통합)<br>총회(PCK) 선교사</p>
+          <p>대한예수교장로회(통합)<br>총회(PCK) 파송 선교사</p>
         </div>
       </div>
 
@@ -1202,6 +1205,7 @@
   <div class="hero-inner">
     <div class="hero-eyebrow" data-i18n="hero.eyebrow">하나님의 부르심을 따라 태국 선교에 문을 엽니다</div>
     <h1 class="calligraphy" data-i18n-html="hero.title">복음과 사랑으로<br>태국선교를 품go.</h1>
+    <p class="hero-mission-line">태국 동북부 이산 지역에서 현지 교회와 함께 예수님의 제자를 세워갑니다.</p>
     <p class="hero-verse">
       "밤에 환상이 바울에게 보이니 마게도냐 사람 하나가 서서 그에게 청하여 이르되 마게도냐로 건너와서 우리를 도우라 하거늘,
       바울이 그 환상을 보았을 때 우리가 곧 마게도냐로 떠나기를 힘쓰니 이는 하나님이 저 사람에게 복음을 전하라고 우리를 부르신 줄로 인정함이러라"
@@ -1250,6 +1254,7 @@
 <section class="photo-wall-section" id="journey-stories">
   <div class="section-inner">
     <h3 class="wall-title">선교사의 부르심</h3>
+    <p class="wall-description">하나님께서 우리 가정을 태국 선교로 이끄신 부르심의 여정을 담았습니다.</p>
     <div class="wall-grid" id="laneJourney">
       <p class="lane-empty">불러오는 중...</p>
     </div>
@@ -1260,6 +1265,7 @@
 <section class="photo-wall-section alt" id="training-stories">
   <div class="section-inner">
     <h3 class="wall-title">선교사 훈련 과정</h3>
+    <p class="wall-description">총회 허입 선교사로 준비되어 가는 시간과 배움의 기록입니다.</p>
     <div class="wall-grid" id="laneTraining">
       <p class="lane-empty">불러오는 중...</p>
     </div>
@@ -1270,6 +1276,7 @@
 <section class="photo-wall-section" id="mission-stories">
   <div class="section-inner">
     <h3 class="wall-title">선교 이야기</h3>
+    <p class="wall-description">태국과 이산을 향한 비전, 만남, 그리고 현지 교회와의 동역을 기록합니다.</p>
     <div class="wall-grid" id="laneMission">
       <p class="lane-empty">불러오는 중...</p>
     </div>
@@ -1280,6 +1287,7 @@
 <section class="photo-wall-section alt" id="daily-stories">
   <div class="section-inner">
     <h3 class="wall-title">일상 이야기</h3>
+    <p class="wall-description">선교를 준비하며 살아가는 평범한 하루 속 하나님의 인도하심을 나눕니다.</p>
     <div class="wall-grid" id="laneDaily">
       <p class="lane-empty">불러오는 중...</p>
     </div>
@@ -1306,6 +1314,7 @@
     <div class="prayer-counter">
       <div class="pc-label" id="prayerLabelText">🙏 오늘 <strong id="prayerDailyNum">0</strong>명의 동역자님들이 함께 기도해주셨어요</div>
       <button class="prayer-btn" id="prayerBtn" type="button" data-i18n="prayer.btn">🙏 저도 기도했어요</button>
+      <p class="prayer-counter-note">작은 클릭 하나가 아니라, 함께 기도하는 마음을 기억하는 공간입니다.</p>
     </div>
   </div>
 </section>
@@ -1390,8 +1399,8 @@
         SUPPORT
       </div>
       <!-- [수정] 요청하신 문구대로 제목 앞에 하트 이모지 추가 -->
-      <h2>❤️ 후원 안내</h2>
-      <p>함께 기도하고 동역해 주시는 교회와 성도님들께 감사드립니다.</p>
+      <h2>🧡 함께 동역하기</h2>
+      <p>기도로 함께하고, 소식으로 함께 걷고, 필요한 곳에 마음을 모아 동역해 주세요.</p>
     </div>
     <!-- [수정] 기존 단일 progress-card를 "후원 안내" + "목적 선교헌금" 두 박스로 나란히 배치 -->
     <div class="support-progress-grid">
@@ -1408,7 +1417,7 @@
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         <div class="progress-meta">
           <!-- [수정] "현재 모금액" → "현재 정기후원 약정" 표현으로 변경 -->
-          <span>현재 정기후원 약정 <strong>2,52,000원</strong></span>
+          <span>현재 정기후원 약정 <strong>2,520,000원</strong></span>
           <!-- [수정] +0.8% = +20,000원 ÷ 2,520,000원 × 100.8 -->
           <span>최소금액 초과액 <strong>0.8%</strong></span>
         </div>
@@ -1459,7 +1468,7 @@
         <h4>일시 후원(파송식 일정전까지 정기 후원과 통일)</h4>
         <span class="donate-card-tag">마음을 담아 보내는 곳</span>
         <!-- [수정] 일시 후원 설명 문구를 요청하신 새 문구로 교체 -->
-        <p>현재까지 다섯 교회와, 한개 기관, 일곱 분의 개인 후원자가 함께 해주시고 계십니다.</p>
+        <p>현재까지 다섯 교회와 한 개 기관, 일곱 분의 개인 후원자가 함께 해주시고 계십니다.</p>
         <div class="num">농협 351-0435-4009-73</div>
         <div class="payee">예금주 : 김영진</div>
         <button class="donate-btn-full blue donate-copy-btn" data-copy="351-0435-4009-73">계좌번호 복사하기</button>
