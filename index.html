@@ -600,7 +600,7 @@
   .post-lightbox-date{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:8px;letter-spacing:.03em;}
   #postLightboxTitle{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:10px;padding-right:26px;}
   #postLightboxSummary{
-    font-size:14px;color:var(--ink-soft);line-height:1.8;white-space:normal;
+    font-size:14px;color:var(--ink-soft);line-height:1.8;white-space:pre-wrap;
     overflow-wrap:anywhere;word-break:break-word;
   }
   #postLightboxSummary p{margin:0 0 12px;}
@@ -2059,14 +2059,21 @@
     return promise;
   }
 
+  function preloadPostImages(postLists) {
+    const urls=[...new Set([].concat(...postLists).flatMap(p=>p?.images||[]).filter(Boolean))];
+    urls.forEach(src=>{
+      const im=new Image();
+      im.decoding='async';
+      im.fetchPriority='high';
+      im.src=src;
+    });
+  }
+
   function autoPrefetchAll(postLists) {
     const all=[...new Map([].concat(...postLists).filter(p=>p&&p.id).map(p=>[p.id,p])).values()];
-    const runBatch=start=>{
-      const batch=all.slice(start,start+4);
-      if(!batch.length)return;
-      Promise.allSettled(batch.map(prefetchPostDetail)).finally(()=>runBatch(start+4));
-    };
-    runBatch(0);
+    // 이미지가 먼저 브라우저 캐시에 들어가도록 한 뒤, 본문은 동시에 미리 받아 둡니다.
+    preloadPostImages(all);
+    Promise.allSettled(all.map(prefetchPostDetail));
   }
 
   function renderLane(elId, posts) {
@@ -2088,9 +2095,10 @@
         const img = document.createElement('img');
         img.src = post.images[0];
         img.alt = post.title || '';
-        img.loading = i < 3 ? 'eager' : 'lazy';
+        // 클릭 즉시 라이트박스에서 재사용할 수 있도록 썸네일도 적극적으로 캐시합니다.
+        img.loading = 'eager';
         img.decoding = 'async';
-        if (i < 3) img.fetchPriority = 'high';
+        img.fetchPriority = 'high';
         thumb.appendChild(img);
       } else if (post.video) {
         const img = document.createElement('img');
