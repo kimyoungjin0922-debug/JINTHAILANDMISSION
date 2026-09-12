@@ -2245,11 +2245,16 @@
     }
 
     if(!post.video&&data.images&&data.images.length){
-      const existing=new Set((post.images||[]).filter(Boolean));
-      data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
-        const img=document.createElement('img');img.src=src;img.alt=post.title||'';
-        img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
-      });
+      // 비전검증문은 상단 슬라이드에 이미 5장의 이미지가 표시되므로,
+      // 노션 본문에 포함된 같은 이미지를 다시 하단에 붙이지 않습니다.
+      const isVisionPost = post && (post.category === '비전검증문' || post.category === '비전 검증문');
+      if(!isVisionPost){
+        const existing=new Set((post.images||[]).filter(Boolean));
+        data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
+          const img=document.createElement('img');img.src=src;img.alt=post.title||'';
+          img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
+        });
+      }
     }
   }
 
