@@ -2223,6 +2223,27 @@
 
   function applyPostDetail(post, data) {
     renderPostContent(postLightboxSummary,data,post.summary||'');
+
+    // [수정] 비전검증문 상세 보기에서 제목이 본문 첫 부분에 한 번 더 표시되는 중복을 제거.
+    // 모달 상단의 제목(#postLightboxTitle)은 그대로 유지하고,
+    // 노션 본문에 같은 제목이 첫 요소로 들어온 경우에만 제거합니다.
+    if(
+      post &&
+      (post.category === '비전검증문' || post.category === '비전 검증문') &&
+      post.title &&
+      postLightboxSummary.firstElementChild
+    ){
+      const first = postLightboxSummary.firstElementChild;
+      const firstText = (first.textContent || '').trim();
+      const postTitle = String(post.title).trim();
+      const isHeading = /^H[1-6]$/.test(first.tagName);
+      const isDuplicateParagraph = first.tagName === 'P' && first.children.length === 0;
+
+      if(firstText === postTitle && (isHeading || isDuplicateParagraph)){
+        first.remove();
+      }
+    }
+
     if(!post.video&&data.images&&data.images.length){
       const existing=new Set((post.images||[]).filter(Boolean));
       data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
