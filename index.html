@@ -1048,8 +1048,7 @@
         <h4>일시 후원</h4>
         <span class="donate-card-tag">마음을 담아 보내는 곳</span>
         <!-- [수정] 팝업 안의 문구도 본문 후원 안내와 동일하게 통일 -->
-        <p>함께 동역하는 공동체 : 주후원† 1곳 · 후원† 7곳 · 기관† 1곳 · 외 함께 동역하는 개인 후원자†들이 있습니다.</p>
-        <p>정기 후원에는 일정 기간 동안의 단기 후원 약정이 포함되어 있습니다.</p>
+        <p> 현재까지 다섯 곳의 교회, 한 곳 기관, 일곱분의 개인 정기 후원자가 함께 하고 계십니다.</p>
         <div class="num">농협 351-0435-4009-73</div>
         <div class="payee">예금주 : 김영진</div>
         <button class="donate-btn-full blue donate-copy-btn" data-copy="351-0435-4009-73">계좌번호 복사하기</button>
@@ -1132,7 +1131,6 @@
             
             <li class="pf-section-label">경력</li>
             <li>광주&순천&해남 교회 교육전도사</li>
-            <li>호신선교센터장</li>
             <li>오산 큰은혜교회 전임전도사</li> 
             <li>상무대교회 부목사</li> 
             <li>새문안교회 선교대학 수료</li>
@@ -1155,7 +1153,6 @@
             <li>예수전도단 순천지부</li>
             <li>NK비전센터(북한선교)</li>
             <li>여수석창교회(유아유치부)</li> 
-            <li>호신선교센터장</li>
             <li>마곡꿈꾸는교회 교육전도사</li> 
             <li>상무대교회 교육전도사</li> 
             <li>새문안교회 선교대학 수료</li>
@@ -2072,6 +2069,27 @@
     return promise;
   }
 
+  // 노션 DB의 사진 속성이 비어 있거나 캐시된 목록에서 사진 URL이 빠진 경우에도
+  // 게시글 본문(type=notion-content)의 이미지까지 다시 확인해 썸네일을 복구합니다.
+  function ensurePostImage(post, thumbEl) {
+    if (!post || !thumbEl) return;
+    const existing = post.images && post.images[0];
+    if (existing) return;
+    prefetchPostDetail(post).then(data => {
+      const src = data && Array.isArray(data.images) ? data.images.find(Boolean) : '';
+      if (!src || post.images?.length) return;
+      post.images = Array.isArray(data.images) ? data.images.slice() : [src];
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = post.title || '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.fetchPriority = 'high';
+      thumbEl.querySelectorAll('img').forEach(x => x.remove());
+      thumbEl.insertBefore(img, thumbEl.firstChild);
+    }).catch(() => {});
+  }
+
   function preloadPostImages(postLists) {
     const urls=[...new Set([].concat(...postLists).flatMap(p=>p?.images||[]).filter(Boolean))];
     urls.forEach(src=>{
@@ -2121,6 +2139,7 @@
       }
       addVideoBadge(thumb, post);
       card.appendChild(thumb);
+      if (!post.images || !post.images[0]) ensurePostImage(post, thumb);
 
       const body = document.createElement('div');
       body.className = 'lane-body';
@@ -2223,38 +2242,12 @@
 
   function applyPostDetail(post, data) {
     renderPostContent(postLightboxSummary,data,post.summary||'');
-
-    // [수정] 비전검증문 상세 보기에서 제목이 본문 첫 부분에 한 번 더 표시되는 중복을 제거.
-    // 모달 상단의 제목(#postLightboxTitle)은 그대로 유지하고,
-    // 노션 본문에 같은 제목이 첫 요소로 들어온 경우에만 제거합니다.
-    if(
-      post &&
-      (post.category === '비전검증문' || post.category === '비전 검증문') &&
-      post.title &&
-      postLightboxSummary.firstElementChild
-    ){
-      const first = postLightboxSummary.firstElementChild;
-      const firstText = (first.textContent || '').trim();
-      const postTitle = String(post.title).trim();
-      const isHeading = /^H[1-6]$/.test(first.tagName);
-      const isDuplicateParagraph = first.tagName === 'P' && first.children.length === 0;
-
-      if(firstText === postTitle && (isHeading || isDuplicateParagraph)){
-        first.remove();
-      }
-    }
-
     if(!post.video&&data.images&&data.images.length){
-      // 비전검증문은 상단 슬라이드에 이미 5장의 이미지가 표시되므로,
-      // 노션 본문에 포함된 같은 이미지를 다시 하단에 붙이지 않습니다.
-      const isVisionPost = post && (post.category === '비전검증문' || post.category === '비전 검증문');
-      if(!isVisionPost){
-        const existing=new Set((post.images||[]).filter(Boolean));
-        data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
-          const img=document.createElement('img');img.src=src;img.alt=post.title||'';
-          img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
-        });
-      }
+      const existing=new Set((post.images||[]).filter(Boolean));
+      data.images.filter(src=>src&&!existing.has(src)).forEach(src=>{
+        const img=document.createElement('img');img.src=src;img.alt=post.title||'';
+        img.decoding='async';img.fetchPriority='high';postLightboxImages.appendChild(img);
+      });
     }
   }
 
@@ -2442,6 +2435,7 @@
         }
         addVideoBadge(thumb, post);
         card.appendChild(thumb);
+        if (!post.images || !post.images[0]) ensurePostImage(post, thumb);
         const body = document.createElement('div');
         body.className = 'lane-body';
         body.innerHTML = `<div class="lane-date">${formatDate(post.date)}</div><h4>${escapeHtml(post.title)}</h4><p class="lane-excerpt">${escapeHtml(post.summary || '')}</p>`;
@@ -2507,6 +2501,7 @@
           }
           addVideoBadge(thumb, post);
           row.appendChild(thumb);
+          if (!post.images || !post.images[0]) ensurePostImage(post, thumb);
           const text = document.createElement('div');
           text.className = 'sr-text';
           text.innerHTML = `<strong>${escapeHtml(post.title)}</strong><span>${escapeHtml(post.category || '')} · ${formatDate(post.date)}</span>`;
@@ -2564,6 +2559,7 @@
     addVideoBadge(thumb, post);
 
     card.appendChild(thumb);
+    if (!post.images || !post.images[0]) ensurePostImage(post, thumb);
     card.appendChild(body);
     card.addEventListener('mouseenter', () => prefetchPostDetail(post));
     card.addEventListener('click', () => openPostLightbox(post));
