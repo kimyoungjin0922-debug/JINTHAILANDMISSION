@@ -1864,9 +1864,20 @@
   function openVisionDoc() {
     if (visionPost) {
       openPostLightbox(visionPost);
-    } else {
-      alert('비전검증문이 아직 등록되지 않았습니다.');
+      return;
     }
+    // 홈페이지가 노션 데이터를 아직 받는 중이라면 '미등록'으로 오인하지 않고
+    // 현재 요청이 끝난 뒤 바로 열어줍니다.
+    if (notionLoadPromise) {
+      notionLoadPromise.then(() => {
+        if (visionPost) openPostLightbox(visionPost);
+        else alert('비전검증문이 아직 등록되지 않았습니다.');
+      }).catch(() => {
+        alert('비전검증문을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      });
+      return;
+    }
+    alert('비전검증문이 아직 등록되지 않았습니다.');
   }
   const visionBadge = document.getElementById('visionBadge');
   const visionBtn = document.getElementById('visionBtn');
@@ -1874,9 +1885,18 @@
   function openPckDoc() {
     if (pckPost) {
       openPostLightbox(pckPost);
-    } else {
-      alert('PCK 총회 선교사 글이 아직 노션에 등록되지 않았습니다.');
+      return;
     }
+    if (notionLoadPromise) {
+      notionLoadPromise.then(() => {
+        if (pckPost) openPostLightbox(pckPost);
+        else alert('PCK 총회 선교사 글이 아직 노션에 등록되지 않았습니다.');
+      }).catch(() => {
+        alert('PCK 총회 선교사 글을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      });
+      return;
+    }
+    alert('PCK 총회 선교사 글이 아직 노션에 등록되지 않았습니다.');
   }
   if (visionBadge) {
     visionBadge.addEventListener('mouseenter', () => { if (pckPost) prefetchPostDetail(pckPost); });
@@ -2082,7 +2102,7 @@
       const img = document.createElement('img');
       img.src = src;
       img.alt = post.title || '';
-      img.loading = 'lazy';
+      img.loading = 'eager';
       img.decoding = 'async';
       img.fetchPriority = 'high';
       thumbEl.querySelectorAll('img').forEach(x => x.remove());
@@ -2357,40 +2377,78 @@
     });
   }
 
-  // 페이지 로드 시 노션에서 소식 불러오기 (백엔드가 노션 API를 대신 호출해줌) — 각 카테고리별 최신 3개만 표시
-  if (SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
-    fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion')
-      .then(res => res.json())
-      .then(data => {
-        const posts = data.posts || [];
-        allPosts = posts; // 검색/카테고리 전체보기/이어보기에서 사용
-        const journeyPosts = posts.filter(p => p.category === '선교사의 부르심').slice(0, 3);
-        const trainingPosts = posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3);
-        const missionPosts = posts.filter(p => p.category === '선교 이야기').slice(0, 3);
-        const dailyPosts = posts.filter(p => p.category === '일상 이야기').slice(0, 3);
-        const letterPosts = posts.filter(p => p.category === '기도 편지' || p.category === '기도편지');
-        renderLane('laneJourney', journeyPosts);
-        renderLane('laneTraining', trainingPosts);
-        renderLane('laneMission', missionPosts);
-        renderLane('laneDaily', dailyPosts);
-        renderPrayerLetters(letterPosts);
-        visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
-        pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
-        handleGalleryHash(); // 주소창에 #gallery/카테고리명 이 있으면 바로 전체보기를 열어줌
+  // 페이지 로드 시 노션에서 소식 불러오기 (백엔드가 노션 API를 대신 호출해줌)
+  // [속도 개선] 이전에 정상적으로 불러온 목록을 즉시 화면에 먼저 표시하고,
+  // 노션 데이터는 백그라운드에서 갱신합니다. 기존 기능/디자인은 그대로 유지합니다.
+  const NOTION_LIST_CACHE_KEY = 'jinthaimission_notion_posts_v3';
+  const NOTION_LIST_CACHE_TTL = 30 * 60 * 1000;
+  let notionLoadPromise = null;
 
-        // 화면에 보이는 글들을 페이지 로드 직후 순서대로 미리 불러와서 클릭 시 버퍼링 없이 뜨도록 함
-        autoPrefetchAll([
-          journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
-          visionPost ? [visionPost] : [],
-          pckPost ? [pckPost] : []
-        ]);
+  function renderNotionPosts(posts) {
+    posts = Array.isArray(posts) ? posts : [];
+    allPosts = posts;
+    const journeyPosts = posts.filter(p => p.category === '선교사의 부르심').slice(0, 3);
+    const trainingPosts = posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3);
+    const missionPosts = posts.filter(p => p.category === '선교 이야기').slice(0, 3);
+    const dailyPosts = posts.filter(p => p.category === '일상 이야기').slice(0, 3);
+    const letterPosts = posts.filter(p => p.category === '기도 편지' || p.category === '기도편지');
+    renderLane('laneJourney', journeyPosts);
+    renderLane('laneTraining', trainingPosts);
+    renderLane('laneMission', missionPosts);
+    renderLane('laneDaily', dailyPosts);
+    renderPrayerLetters(letterPosts);
+    visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
+    pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
+    handleGalleryHash();
+    autoPrefetchAll([
+      journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
+      visionPost ? [visionPost] : [],
+      pckPost ? [pckPost] : []
+    ]);
+  }
+
+  function readNotionListCache() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(NOTION_LIST_CACHE_KEY) || 'null');
+      if (cached && Array.isArray(cached.posts)) {
+        // 만료되어도 즉시 화면 표시에는 사용하고, 아래에서 최신 데이터를 백그라운드 갱신합니다.
+        return cached.posts;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function writeNotionListCache(posts) {
+    try {
+      localStorage.setItem(NOTION_LIST_CACHE_KEY, JSON.stringify({time: Date.now(), posts: posts || []}));
+    } catch (e) {}
+  }
+
+  if (SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
+    const cachedPosts = readNotionListCache();
+    if (cachedPosts && cachedPosts.length) {
+      // 첫 화면에서는 기다리지 않고 기존 목록/사진을 즉시 복원합니다.
+      renderNotionPosts(cachedPosts);
+    }
+
+    notionLoadPromise = fetch(SUBSCRIBE_SCRIPT_URL + '?type=notion', {cache: 'no-store'})
+      .then(res => { if (!res.ok) throw new Error('노션 목록을 불러오지 못했습니다.'); return res.json(); })
+      .then(data => {
+        const posts = Array.isArray(data.posts) ? data.posts : [];
+        writeNotionListCache(posts);
+        renderNotionPosts(posts);
+        return posts;
       })
-      .catch(() => {
-        renderLane('laneJourney', []);
-        renderLane('laneTraining', []);
-        renderLane('laneMission', []);
-        renderLane('laneDaily', []);
-        renderPrayerLetters([]);
+      .catch(err => {
+        // 최신 요청이 실패해도 이미 화면에 표시한 캐시 내용은 지우지 않습니다.
+        if (!cachedPosts || !cachedPosts.length) {
+          renderLane('laneJourney', []);
+          renderLane('laneTraining', []);
+          renderLane('laneMission', []);
+          renderLane('laneDaily', []);
+          renderPrayerLetters([]);
+        }
+        throw err;
       });
   } else {
     renderLane('laneJourney', []);
@@ -2398,6 +2456,7 @@
     renderLane('laneMission', []);
     renderLane('laneDaily', []);
     renderPrayerLetters([]);
+    notionLoadPromise = Promise.resolve([]);
   }
 
   // ===== 카테고리 전체보기 (가상 페이지) — 이미 불러온 allPosts를 재사용, 추가 API 호출 없음 =====
