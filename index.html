@@ -540,7 +540,7 @@
 
   /* ===== Post lightbox (Notion posts) ===== */
   .post-lightbox-overlay{
-    position:fixed;inset:0;z-index:300;background:rgba(8,30,38,.72);
+    position:fixed;inset:0;z-index:345;background:rgba(8,30,38,.72);
     display:flex;align-items:center;justify-content:center;padding:24px;
     opacity:0;pointer-events:none;transition:opacity .25s ease;
   }
@@ -562,7 +562,7 @@
   .post-share-trigger svg{width:13px;height:13px;}
   /* [수정] 공유 모달 — 카카오톡/페이스북/인스타그램/Threads/링크복사 */
   .share-modal-overlay{
-    position:fixed;inset:0;z-index:340;background:rgba(8,30,38,.72);
+    position:fixed;inset:0;z-index:350;background:rgba(8,30,38,.72);
     display:flex;align-items:center;justify-content:center;padding:20px;
     opacity:0;pointer-events:none;transition:opacity .25s ease;
   }
@@ -2708,10 +2708,6 @@
   const pctNum = document.getElementById('pctNum');
   if (fill) fill.style.width = '100%';
   if (pctNum) pctNum.textContent = '100%';
-
-  // [수정] 박스가 2개(후원 안내 / 목적 선교헌금)로 늘어나서 왼쪽(후원 안내) 박스를 명확히 지정
-  const supportProgressCards = document.querySelectorAll('.progress-card');
-  if (supportProgressCards[0]) progressObserver.observe(supportProgressCards[0]);
 
   // [수정] ===== 목적 선교헌금 사역별 데이터 =====
   // 아래 배열의 항목 하나가 사역 카드 하나에 해당합니다. 각 값의 의미는 다음과 같습니다.
