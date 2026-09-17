@@ -2441,7 +2441,7 @@
   // 페이지 로드 시 노션에서 소식 불러오기 (백엔드가 노션 API를 대신 호출해줌)
   // [속도 개선] 이전에 정상적으로 불러온 목록을 즉시 화면에 먼저 표시하고,
   // 노션 데이터는 백그라운드에서 갱신합니다. 기존 기능/디자인은 그대로 유지합니다.
-  const NOTION_LIST_CACHE_KEY = 'jinthaimission_notion_posts_v3';
+  const NOTION_LIST_CACHE_KEY = 'jinthaimission_notion_posts_v4'; // [수정] v3→v4: 번호/서식(blocks) 필드가 추가되어 예전 캐시를 건너뛰도록 버전을 올림
   const NOTION_LIST_CACHE_TTL = 30 * 60 * 1000;
   let notionLoadPromise = null;
 
