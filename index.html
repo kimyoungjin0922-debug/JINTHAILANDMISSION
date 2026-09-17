@@ -2473,7 +2473,10 @@
 
   function findTheologyPost(posts, num, title){
     const list = (Array.isArray(posts)?posts:[]).filter(p=>p.category==='선교신학');
-    // 번호 앞자리를 어떤 구두점으로 적었든(., -, _, :, 공백, 없음) 유연하게 매칭합니다.
+    // [수정] 노션에 "번호" 속성(01~08)을 넣어주셨다면 그 값으로 정확히 짝짓습니다. 가장 확실한 방법입니다.
+    const byNumber = list.find(p => p.number === num);
+    if (byNumber) return byNumber;
+    // 번호 속성이 없는 글은 예전처럼 제목으로 찾되, 번호 표기 방식(., -, _, :, 공백, 없음)에 관계없이 매칭합니다.
     const stripNum = (s) => (s||'').trim().replace(/^0*\d+\s*[.\-_:]?\s*/, '');
     return list.find(p => {
       const t = (p.title||'').trim();
