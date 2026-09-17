@@ -2472,9 +2472,12 @@
   };
 
   function findTheologyPost(posts, num, title){
-    return (Array.isArray(posts)?posts:[]).filter(p=>p.category==='선교신학').find(p=>{
-      const t=(p.title||'').trim();
-      return t===title || t===`${num}. ${title}` || t===`${num} ${title}` || t.includes(title);
+    const list = (Array.isArray(posts)?posts:[]).filter(p=>p.category==='선교신학');
+    // 번호 앞자리를 어떤 구두점으로 적었든(., -, _, :, 공백, 없음) 유연하게 매칭합니다.
+    const stripNum = (s) => (s||'').trim().replace(/^0*\d+\s*[.\-_:]?\s*/, '');
+    return list.find(p => {
+      const t = (p.title||'').trim();
+      return t === title || stripNum(t) === title || t.includes(title);
     });
   }
 
