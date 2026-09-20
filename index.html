@@ -983,11 +983,12 @@
     .hero-card-text{text-align:center;}
     .footer-grid{grid-template-columns:1fr;gap:36px;}
     .footer-bottom{flex-direction:column;align-items:flex-start;}
-  /* ===== 사역지 지도 ===== */
-  .field-map-wrap{display:block !important;max-width:100% !important;width:100% !important;margin:0 auto !important;float:none !important;border-radius:20px;overflow:hidden;box-shadow:0 14px 30px rgba(11,60,77,.12);border:1px solid var(--line);}
-  .field-map-wrap iframe{display:block !important;width:100% !important;height:620px;border:0;}
-  .field-map-hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:12px;}
+  /* ===== 사역 지역 지도 ===== */
+  .field-map-wrap{display:flex !important;align-items:center;justify-content:center;max-width:980px !important;width:100% !important;min-height:560px;margin:0 auto !important;float:none !important;border-radius:20px;overflow:hidden;box-shadow:0 14px 30px rgba(11,60,77,.12);border:1px solid var(--line);background:#fff;padding:24px;box-sizing:border-box;}
+  .field-map-wrap img{display:block;width:100%;max-width:820px;height:auto;max-height:720px;object-fit:contain;margin:0 auto;}
+  .field-map-hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:12px;line-height:1.7;}
   .field-map-hint a{color:var(--sky);font-weight:700;}
+  .field-map-credit{font-size:11px;color:var(--ink-soft);text-align:center;margin:8px 0 0;line-height:1.6;}
 
   /* ===== 글로벌 기도 카운터 ===== */
   .prayer-counter{
@@ -1041,7 +1042,8 @@
   .lang-switch-menu li.active{color:var(--orange-deep);background:var(--sky-soft);}
 
     .sticky-row{flex-direction:column;}
-    .field-map-wrap iframe{height:380px;}
+    .field-map-wrap{min-height:360px;padding:14px;}
+    .field-map-wrap img{max-height:520px;}
   }
 </style>
 </head>
@@ -1163,33 +1165,51 @@
           <div class="profile-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"/></svg>
           </div>
-          <h4>소속</h4>
-          <p>대한예수교장로회 통합(PCK)<br>총회 선교사</p>
+          <h4>파송</h4>
+          <p>대한예수교장로회(통합)<br>총회(PCK) 파송 선교사</p>
         </div>
       </div>
 
       <div class="profile-info-grid">
         <div class="profile-info-card">
-          <h5>학력 및 주요 사역(김영진 목사)</h5>
+          <h5>학력 및 경력(김영진 목사)</h5>
           <ul>
             <li class="pf-section-label">학력</li>
-            <li>호남신학대학교 (Th.B/M.div)</li>
-            <li class="pf-section-label">주요 사역</li>
-            <li>국내 교회 교육 및 목회 사역</li>
+            <li>호남신학대학교(Th.B)</li>
+            <li>호남신학대학교 신대원(M.Div)</li>
+            <li>스포츠과학대학원(단국대) 수료</li>
+            
+            <li class="pf-section-label">경력</li>
+            <li>순천한소망, 하남(광주), 순천은성, 해남목장교회 교육전도사</li>
             <li>호남신학대학교 선교센터장</li>
-            <li>교회 전임전도사 및 부목사 사역</li>
+            <li>오산 큰은혜교회 전임전도사</li> 
+            <li>상무대교회 부목사</li> 
+            <li>새문안교회 선교대학 수료</li>
+            <li>온누리교회(광주) 교육목사</li> 
+            <li>PCK 제110회기 75기 총회 파송 선교사 수료 (2026.5.15)</li>           
+            <li>PCK 총회 허입 선교사(파송전)</li>
+
           </ul>
         </div>
         <div class="profile-info-card">
-          <h5>학력 및 주요 사역(박은신 선교사)</h5>
+          <h5>학력 및 경력(박은신 전도사)</h5>
           <ul>
             <li class="pf-section-label">학력</li>
             <li>경남대학교 심리학과(B.A)</li>
-            <li>호남신학대학교 신대원(M.Div)</li>
-            <li class="pf-section-label">주요 사역</li>
-            <li>해외 및 국내 선교 관련 사역</li>
-            <li>교회 교육 사역</li>
+            <li>호남신학대학교 신대원(M.div)</li>
+            
+            <li class="pf-section-label">경력</li>
+            <li>스리랑카 YWAM(선교베이스개척/선교사훈련학교)</li>
+            <li>시청 계약직, 경리, 원어민 영어학원 보조강사 등)</li>
+            <li>예수전도단 순천지부</li>
+            <li>NK비전센터(북한선교)</li>
+            <li>여수석창교회(유아유치부)</li> 
             <li>호남신학대학교 선교센터장</li>
+            <li>마곡꿈꾸는교회 교육전도사</li> 
+            <li>상무대교회 교육전도사</li> 
+            <li>새문안교회 선교대학 수료</li>
+            <li>PCK 제110회기 75기 총회 파송 선교사 수료</li>           
+            <li>PCK 총회 허입 선교사(파송전)</li>
           </ul>
         </div>
         <div class="profile-info-card">
@@ -1200,17 +1220,15 @@
           </ul>
         </div>
         <div class="profile-info-card">
-          <h5>자격 & 이수</h5>
+          <h5>자격증</h5>
           <ul>
-            <li>국기원 태권도 4단</li>
-            <li>PCK 총회 파송 선교사 과정 수료</li>
-            <li>PCK 총회 허입 선교사</li>
+            <li>국가 공인 태권도(국기원) 4단</li>
           </ul>
         </div>
         <div class="profile-info-card">
           <h5>취미</h5>
           <ul>
-            <li>자전거, 런닝, 독서</li>
+            <li>태권도, 기타 연주, 작사·작곡</li>
           </ul>
         </div>
         <div class="profile-info-card">
@@ -1330,22 +1348,17 @@
 </section>
 
 <section class="photo-wall-section alt" id="field-map-section">
-  <div class="container">
+  <div class="section-inner">
     <div class="section-head">
-      <div>
-        <div class="eyebrow">Mission Field</div>
-        <h2 data-i18n="map.title">사역 지역</h2>
-        <p data-i18n="map.sub">정확한 위치보다 하나님께서 맡기신 지역과 동역의 방향을 소개합니다.</p>
-      </div>
+      <div class="eyebrow">Mission Region</div>
+      <h2 data-i18n="map.title">사역 지역</h2>
+      <p data-i18n="map.sub">태국 전체에서 동북부 이산 지역과 우돈타니의 위치를 보여드립니다.</p>
     </div>
-    <div class="field-map-wrap" style="min-height:220px;display:flex;align-items:center;justify-content:center;padding:40px;box-sizing:border-box;">
-      <div style="text-align:center;max-width:680px;""THAILAND MISSION>
-        <div style="font-size:42px;margin-bottom:14px;</div>
-        <h3 style="margin:0 0 12px;">태국 동북부 이산 지역</h3>
-        <p style="margin:0;line-height:1.8;">CCT교단 그리고 13노회와 협력하여 현지 교회와 함께 목회와 제자훈련, 교회 개척을 섬깁니다.</p>
-        <p style="margin:12px 0 0;font-size:.9em;opacity:.72;">현지 교회와 동역자의 안전과 사생활 보호를 위해 구체적인 주소와 지도 위치는 공개하지 않습니다.</p>
-      </div>
+    <div class="field-map-wrap">
+      <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Thailand_Udon_Thani_locator_map.svg" loading="lazy" alt="태국 전체 지도에서 우돈타니의 위치를 보여주는 지도">
     </div>
+    <p class="field-map-hint">정확한 현지 주소나 개별 사역 장소는 공개하지 않고, 선교 지역의 큰 위치만 안내합니다.</p>
+    <p class="field-map-credit">지도: Wikimedia Commons · Thailand Udon Thani locator map · CC BY 3.0</p>
   </div>
 </section>
 
@@ -1640,16 +1653,22 @@
     </div>
     <div>
       <h5>연락처</h5>
-      <div class="contact-row">
+      <a href="#field-map-section" class="contact-row contact-row-link">
         <span class="contact-row-icon location"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.4-7-11a7 7 0 0114 0c0 4.6-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
-        <span>태국 동북부 이산 지역<br><small>CCT 13노회와 협력하여 사역합니다.</small></span>
-      </div>
+        <span>คริสตจักรภาคที่ 13 <br><small>(Church Region/Presbytery 13)</small></span>
+      </a>
       <button type="button" class="contact-row contact-row-link" id="contactEmailCopy" data-copy="kookod@naver.com">
         <span class="contact-row-icon email"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg></span>
         <span id="contactEmailText">kookod@naver.com</span>
       </button>
-      
-      
+      <a href="https://buly.kr/1n6YiJV" target="_blank" rel="noopener noreferrer" class="contact-row contact-row-link">
+        <span class="contact-row-icon facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2 0-3.5 1.5-3.5 3.5V12H8v3h2.5v6h3v-6H16l.5-3h-3v-1.5c0-.6.4-1.5 1.5-1.5z"/></svg></span>
+        <span>kimyoungjin0922</span>
+      </a>
+      <a href="https://instagram.com/kookod12" target="_blank" rel="noopener noreferrer" class="contact-row contact-row-link">
+        <span class="contact-row-icon instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6"/><circle cx="12" cy="12" r="5" style="fill:none;stroke:#E1306C;stroke-width:2;"/><circle cx="18" cy="6" r="1.4"/></svg></span>
+        <span>@kookod12</span>
+      </a>
     </div>
     <div>
       <h5>후원 계좌</h5>
@@ -1663,7 +1682,10 @@
   </div>
   <div class="footer-bottom">
     <span>© 2026 김&amp;박 선교사의 태국 선교 이야기. All rights reserved.</span>
-
+    <div class="socials">
+      <a href="https://buly.kr/1n6YiJV" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2 0-3.5 1.5-3.5 3.5V12H8v3h2.5v6h3v-6H16l.5-3h-3v-1.5c0-.6.4-1.5 1.5-1.5z"/></svg></a>
+      <a href="https://instagram.com/kookod12" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.4"/><circle cx="17" cy="7" r="1"/></svg></a>
+    </div>
   </div>
 </footer>
 
@@ -1704,7 +1726,7 @@
       'hero.eyebrow': 'Answering God\u2019s call to serve in Thailand',
       'hero.title': 'Sharing the Gospel<br>and love in Thailand.',
       'hero.visionBtn': 'Read our vision statement',
-      'map.title': 'Mission Field', 'map.sub': 'Serving with local churches in the Isan region of Thailand.',
+      'map.title': 'Mission Region', 'map.sub': 'The map shows where Udon Thani is located in northeastern Thailand (Isan).',
       'prayer.btn': '\ud83d\ude4f I prayed too',
       'gallery.title': 'Missionary & Ministry Stories', 'gallery.sub': 'Stories from under the Isan sky in Thailand.',
       'guestbook.title': 'Messages of Blessing', 'guestbook.sub': 'Leave a warm word of blessing for the missionary family.',
@@ -1716,7 +1738,7 @@
       'hero.eyebrow': 'ตอบสนองการทรงเรียกของพระเจ้าเพื่อรับใช้ในประเทศไทย',
       'hero.title': 'แบ่งปันข่าวประเสริฐ<br>และความรักในประเทศไทย',
       'hero.visionBtn': 'อ่านถ้อยแถลงวิสัยทัศน์ของเรา',
-      'map.title': 'พื้นที่พันธกิจ', 'map.sub': 'ร่วมรับใช้กับคริสตจักรท้องถิ่นในภาคอีสานของประเทศไทย',
+      'map.title': 'พื้นที่พันธกิจ', 'map.sub': 'แผนที่แสดงตำแหน่งของอุดรธานีในภาคตะวันออกเฉียงเหนือของประเทศไทย (อีสาน)',
       'prayer.btn': '\ud83d\ude4f ฉันก็อธิษฐานด้วย',
       'gallery.title': 'เรื่องราวมิชชันนารีและพันธกิจ', 'gallery.sub': 'เรื่องราวใต้ท้องฟ้าอีสานในประเทศไทย',
       'guestbook.title': 'ข้อความอวยพร', 'guestbook.sub': 'ฝากข้อความอวยพรอบอุ่นถึงครอบครัวมิชชันนารี',
