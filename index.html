@@ -1089,6 +1089,7 @@
     <a href="#daily-stories" data-i18n="nav.daily">일상 이야기</a>
     <a href="#letter" data-i18n="nav.letter">기도편지</a>
     <a href="#mission-theology" data-i18n="nav.theology">선교신학</a>
+    <a href="#gospel-stories" data-i18n="nav.gospel">복음 이야기</a>
   </nav>
   <div class="header-search">
     <input type="text" id="siteSearchInput" placeholder="검색">
@@ -1359,6 +1360,15 @@
       <p class="lane-empty">불러오는 중...</p>
     </div>
     <div class="wall-more" data-cat="일상 이야기" data-lane="laneDaily">전체 이야기 보기 →</div>
+  </div>
+</section>
+
+<section class="photo-wall-section" id="gospel-stories">
+  <div class="section-inner">
+    <h3 class="wall-title">복음 이야기</h3>
+    <p class="wall-description">책을 읽으며, 태국을 바라보며, 불교를 이해하며, 사람과 삶을 만나며 마음에 남은 질문들을 복음 안에서 함께 생각합니다.</p>
+    <div class="wall-grid" id="laneGospel"></div>
+    <div class="wall-more" data-cat="복음 이야기" data-lane="laneGospel">전체 이야기 보기 →</div>
   </div>
 </section>
 
@@ -1761,7 +1771,7 @@
     en: {
       'nav.about': 'About', 'nav.profile': 'Profile', 'nav.journey': 'Our Calling',
       'nav.training': 'Training', 'nav.mission': 'Mission Stories', 'nav.daily': 'Daily Life',
-      'nav.letter': 'Prayer Letters', 'nav.theology': 'Mission Theology', 'nav.donate': 'Support Us',
+      'nav.letter': 'Prayer Letters', 'nav.theology': 'Mission Theology', 'nav.gospel': 'Gospel Stories', 'nav.donate': 'Support Us',
       'hero.eyebrow': 'Answering God\u2019s call to serve in Thailand',
       'hero.title': 'Sharing the Gospel<br>and love in Thailand.',
       'hero.visionBtn': 'Read our vision statement',
@@ -1773,7 +1783,7 @@
     th: {
       'nav.about': 'เกี่ยวกับเรา', 'nav.profile': 'โปรไฟล์', 'nav.journey': 'การทรงเรียก',
       'nav.training': 'การฝึกอบรม', 'nav.mission': 'เรื่องราวพันธกิจ', 'nav.daily': 'ชีวิตประจำวัน',
-      'nav.letter': 'จดหมายอธิษฐาน', 'nav.theology': 'เทววิทยาพันธกิจ', 'nav.donate': 'สนับสนุน',
+      'nav.letter': 'จดหมายอธิษฐาน', 'nav.theology': 'เทววิทยาพันธกิจ', 'nav.gospel': 'เรื่องราวข่าวประเสริฐ', 'nav.donate': 'สนับสนุน',
       'hero.eyebrow': 'ตอบสนองการทรงเรียกของพระเจ้าเพื่อรับใช้ในประเทศไทย',
       'hero.title': 'แบ่งปันข่าวประเสริฐ<br>และความรักในประเทศไทย',
       'hero.visionBtn': 'อ่านถ้อยแถลงวิสัยทัศน์ของเรา',
@@ -2566,17 +2576,19 @@
     const trainingPosts = posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3);
     const missionPosts = posts.filter(p => p.category === '선교 이야기').slice(0, 3);
     const dailyPosts = posts.filter(p => p.category === '일상 이야기').slice(0, 3);
+    const gospelPosts = posts.filter(p => p.category === '복음 이야기').slice(0, 3);
     const letterPosts = posts.filter(p => p.category === '기도 편지' || p.category === '기도편지');
     renderLane('laneJourney', journeyPosts);
     renderLane('laneTraining', trainingPosts);
     renderLane('laneMission', missionPosts);
     renderLane('laneDaily', dailyPosts);
+    renderLane('laneGospel', gospelPosts);
     renderPrayerLetters(letterPosts);
     visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
     pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
     handleGalleryHash();
     autoPrefetchAll([
-      journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
+      journeyPosts, trainingPosts, missionPosts, dailyPosts, gospelPosts, letterPosts,
       visionPost ? [visionPost] : [],
       pckPost ? [pckPost] : []
     ]);
@@ -2621,6 +2633,7 @@
           renderLane('laneTraining', []);
           renderLane('laneMission', []);
           renderLane('laneDaily', []);
+          renderLane('laneGospel', []);
           renderPrayerLetters([]);
         }
         throw err;
