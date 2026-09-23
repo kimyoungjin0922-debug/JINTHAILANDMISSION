@@ -901,52 +901,6 @@
   .socials a:hover svg{stroke:#fff;}
 
 
-  /* ===== 선교신학 ===== */
-  .mission-theology-section{background:var(--bg-alt);padding-top:92px;padding-bottom:96px;}
-  .mission-theology-intro{max-width:780px;margin:0 auto 52px;text-align:center;}
-  .mission-theology-kicker{font-size:11px;letter-spacing:.18em;font-weight:800;color:var(--sky);margin-bottom:14px;}
-  .mission-theology-intro h3{font-size:28px;line-height:1.45;color:var(--navy);font-weight:800;margin:0 0 15px;}
-  .mission-theology-intro p{font-size:14px;line-height:2;color:var(--ink-soft);margin:0;}
-  .theology-group{max-width:1140px;margin:0 auto 52px;}
-  .theology-group:last-of-type{margin-bottom:30px;}
-  .theology-group-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:17px;padding:0 2px 12px;border-bottom:1px solid var(--line);}
-  .theology-group-label{font-size:10px;letter-spacing:.18em;color:var(--sky);font-weight:800;margin-bottom:5px;}
-  .theology-group-title{font-size:19px;color:var(--navy);font-weight:800;}
-  .theology-group-desc{font-size:12px;color:var(--ink-soft);text-align:right;}
-  .theology-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
-  .theology-card{
-    position:relative;width:100%;min-height:178px;border:1px solid var(--line);background:#fff;border-radius:16px;padding:0;
-    display:flex;align-items:stretch;text-align:left;cursor:pointer;overflow:hidden;
-    box-shadow:0 5px 18px rgba(11,60,77,.045);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
-  }
-  .theology-card:hover{transform:translateY(-3px);box-shadow:0 13px 28px rgba(11,60,77,.10);border-color:rgba(46,159,214,.42);}
-  .theology-card-visual{width:39%;min-width:150px;position:relative;background:linear-gradient(135deg,rgba(46,159,214,.10),rgba(11,60,77,.08));overflow:hidden;}
-  .theology-card-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease;}
-  .theology-card:hover .theology-card-visual img{transform:scale(1.045);}
-  .theology-card-visual-placeholder{position:absolute;inset:0;display:flex;align-items:flex-end;padding:15px;background:linear-gradient(180deg,rgba(255,255,255,0) 30%,rgba(11,60,77,.22));}
-  .theology-card-visual-placeholder span{font-size:34px;font-weight:800;color:rgba(255,255,255,.92);letter-spacing:-.04em;text-shadow:0 2px 8px rgba(0,0,0,.16);}
-  .theology-card-body{min-width:0;flex:1;padding:23px 23px 20px;display:flex;flex-direction:column;}
-  .theology-num{font-size:10px;letter-spacing:.16em;font-weight:800;color:var(--sky);margin-bottom:12px;}
-  .theology-card h3{font-size:17px;font-weight:800;color:var(--navy);line-height:1.45;margin-bottom:7px;}
-  .theology-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.65;margin:0;}
-  .theology-arrow{margin-top:auto;padding-top:16px;font-size:16px;color:var(--ink-soft);transition:transform .2s ease,color .2s ease;}
-  .theology-card:hover .theology-arrow{transform:translateX(4px);color:var(--orange);}
-  .theology-note{max-width:1140px;margin:20px auto 0;padding:18px 22px;border-radius:12px;background:rgba(255,255,255,.72);font-size:12px;line-height:1.8;color:var(--ink-soft);text-align:center;border:1px solid rgba(0,0,0,.035);}
-  @media (max-width:760px){
-    .mission-theology-section{padding-top:70px;padding-bottom:72px;}
-    .mission-theology-intro{margin-bottom:38px;}
-    .mission-theology-intro h3{font-size:23px;}
-    .mission-theology-intro p{font-size:13px;}
-    .theology-group{margin-bottom:38px;}
-    .theology-group-head{display:block;}
-    .theology-group-desc{text-align:left;margin-top:5px;}
-    .theology-grid{grid-template-columns:1fr;gap:12px;}
-    .theology-card{min-height:148px;}
-    .theology-card-visual{width:32%;min-width:105px;}
-    .theology-card-body{padding:18px 17px;}
-    .theology-card h3{font-size:15px;}
-    .theology-card p{font-size:12px;}
-  }
 
   /* ===== Responsive ===== */
   @media (max-width:1180px){
@@ -1173,8 +1127,6 @@
     <a href="#mission-stories" data-i18n="nav.mission">선교 이야기</a>
     <a href="#daily-stories" data-i18n="nav.daily">일상 이야기</a>
     <a href="#letter" data-i18n="nav.letter">기도편지</a>
-    <a href="#mission-theology" data-i18n="nav.theology">선교신학</a>
-    <a href="#gospel-stories" data-i18n="nav.gospel">복음 이야기</a>
   </nav>
   <div class="header-search">
     <input type="text" id="siteSearchInput" placeholder="검색">
@@ -1448,15 +1400,6 @@
   </div>
 </section>
 
-<section class="photo-wall-section" id="gospel-stories">
-  <div class="section-inner">
-    <h3 class="wall-title">복음 이야기</h3>
-    <p class="wall-description">책을 읽으며, 태국을 바라보며, 불교를 이해하며, 사람과 삶을 만나며 마음에 남은 질문들을 복음 안에서 함께 생각합니다.</p>
-    <div class="wall-grid" id="laneGospel"></div>
-    <div class="wall-more" data-cat="복음 이야기" data-lane="laneGospel">전체 이야기 보기 →</div>
-  </div>
-</section>
-
 <section class="photo-wall-section alt" id="field-map-section">
   <div class="section-inner">
     <div class="section-head">
@@ -1579,21 +1522,6 @@
 </button>
 
 
-<section class="mission-theology-section" id="mission-theology">
-  <div class="section-inner">
-    <div class="section-head">
-      <div class="eyebrow">MISSION THEOLOGY</div>
-      <h2>선교신학</h2>
-    </div>
-    <div class="mission-theology-intro">
-      <div class="mission-theology-kicker">BELIEVE · LEARN · ASK · LIVE</div>
-      <h3>복음에서 시작하여<br>태국의 현장에서 선교를 살아갑니다.</h3>
-      <p>대한예수교장로회(통합) 총회 선교사로서 무엇을 믿고, 무엇을 배우며,<br>현지교회와 어떤 태도로 함께 걸어갈 것인가를 기록합니다.</p>
-    </div>
-    <div id="theologyGroups"></div>
-    <div class="theology-note">현재 7개의 글이 준비되어 있으며, 마지막 08번은 태국에서 사역하며 계속 다듬어 갈 선교사로서의 약속으로 남겨두었습니다.</div>
-  </div>
-</section>
 
 <section class="support" id="support">
   <div class="section-inner">
@@ -1856,7 +1784,7 @@
     en: {
       'nav.about': 'About', 'nav.profile': 'Profile', 'nav.journey': 'Our Calling',
       'nav.training': 'Training', 'nav.mission': 'Mission Stories', 'nav.daily': 'Daily Life',
-      'nav.letter': 'Prayer Letters', 'nav.theology': 'Mission Theology', 'nav.gospel': 'Gospel Stories', 'nav.donate': 'Support Us',
+      'nav.letter': 'Prayer Letters', 'nav.donate': 'Support Us',
       'hero.eyebrow': 'Answering God\u2019s call to serve in Thailand',
       'hero.title': 'Sharing the Gospel<br>and love in Thailand.',
       'hero.visionBtn': 'Read our vision statement',
@@ -1868,7 +1796,7 @@
     th: {
       'nav.about': 'เกี่ยวกับเรา', 'nav.profile': 'โปรไฟล์', 'nav.journey': 'การทรงเรียก',
       'nav.training': 'การฝึกอบรม', 'nav.mission': 'เรื่องราวพันธกิจ', 'nav.daily': 'ชีวิตประจำวัน',
-      'nav.letter': 'จดหมายอธิษฐาน', 'nav.theology': 'เทววิทยาพันธกิจ', 'nav.gospel': 'เรื่องราวข่าวประเสริฐ', 'nav.donate': 'สนับสนุน',
+      'nav.letter': 'จดหมายอธิษฐาน', 'nav.donate': 'สนับสนุน',
       'hero.eyebrow': 'ตอบสนองการทรงเรียกของพระเจ้าเพื่อรับใช้ในประเทศไทย',
       'hero.title': 'แบ่งปันข่าวประเสริฐ<br>และความรักในประเทศไทย',
       'hero.visionBtn': 'อ่านถ้อยแถลงวิสัยทัศน์ของเรา',
@@ -2141,7 +2069,6 @@
       emailInput.value = '';
 
       // 2) 실제 저장 + 알림 메일 발송 (Google Apps Script 백엔드로 전송)
-      renderMissionTheology([]);
 
   if (SUBSCRIBE_SCRIPT_URL && SUBSCRIBE_SCRIPT_URL.indexOf('PASTE_YOUR') === -1) {
         const formData = new FormData();
@@ -2583,97 +2510,24 @@
   let notionLoadPromise = null;
 
 
-  // ===== 선교신학 01~08 =====
-  const theologyGroups = [
-    {label:'01 · FOUNDATION', title:'선교의 기초', desc:'내가 누구이며, 어떤 신앙과 선교 이해를 가지고 나아가는지를 정리합니다.', items:[
-      ['01','내가 지향하는 선교','PCK 총회 선교사로서의 정체성, 하나님의 선교, 현지교회와 함께하는 동반자 선교를 고백합니다.'],
-      ['02','복음과 에큐메니칼 신앙','총회 에큐메니칼위원회의 『복음과 에큐메니칼 신앙』을 통해 선교의 신학적 토대를 배웁니다.']
-    ]},
-    {label:'02 · ECUMENICAL MISSION', title:'에큐메니칼 선교를 배우다', desc:'교회의 일치와 협력, 그리고 에큐메니칼 선교에 대한 질문을 살펴봅니다.', items:[
-      ['03','에큐메니칼 선교를 이해하다','복음과 에큐메니칼 신앙에 대한 참고문헌을 바탕으로 선교를 이해하고 정리합니다.'],
-      ['04','WCC에 대한 질문과 오해','WCC와 에큐메니칼 운동을 둘러싼 주요 질문을 하나씩 살펴보고 신앙적으로 생각합니다.']
-    ]},
-    {label:'03 · THAILAND MISSION', title:'태국 선교를 바라보다', desc:'태국교회와 한국교회의 선교 역사를 배우며 앞으로의 방향을 성찰합니다.', items:[
-      ['05','태국 선교의 역사','태국의 종교와 문화에서 시작하여 태국 기독교, 장로교, CCT와 오늘의 태국교회까지 살펴봅니다.'],
-      ['06','한국교회의 태국선교','한국교회의 태국 선교 역사와 열매, 한계를 돌아보며 앞으로의 선교 방향을 생각합니다.']
-    ]},
-    {label:'04 · MY MISSION', title:'내가 살아갈 선교', desc:'배운 선교신학을 태국 이산의 현장에서 어떤 모습으로 살아갈 것인지 생각합니다.', items:[
-      ['07','내가 바라보는 태국 선교','현지교회와 함께하고, 현지 목회자의 리더십을 존중하며, 관계와 제자를 중심으로 선교를 바라봅니다.'],
-      ['08','선교사로서 나에게 하는 약속','현장에서 잊지 말아야 할 선교사의 태도와 약속을 기록합니다.']
-    ]}
-  ];
-
-  // 사진은 준비되는 대로 각 항목의 image 값을 채우면 카드에 자동으로 표시됩니다.
-  const theologyImages = {
-    '01':'', '02':'', '03':'', '04':'', '05':'', '06':'', '07':'', '08':''
-  };
-
-  function findTheologyPost(posts, num, title){
-    const list = (Array.isArray(posts)?posts:[]).filter(p=>p.category==='선교신학');
-    // [수정] 노션에 "번호" 속성(01~08)을 넣어주셨다면 그 값으로 정확히 짝짓습니다. 가장 확실한 방법입니다.
-    const byNumber = list.find(p => p.number === num);
-    if (byNumber) return byNumber;
-    // 번호 속성이 없는 글은 예전처럼 제목으로 찾되, 번호 표기 방식(., -, _, :, 공백, 없음)에 관계없이 매칭합니다.
-    const stripNum = (s) => (s||'').trim().replace(/^0*\d+\s*[.\-_:]?\s*/, '');
-    return list.find(p => {
-      const t = (p.title||'').trim();
-      return t === title || stripNum(t) === title || t.includes(title);
-    });
-  }
-
-  function renderMissionTheology(posts){
-    const root=document.getElementById('theologyGroups');
-    if(!root) return;
-    root.innerHTML='';
-    theologyGroups.forEach(group=>{
-      const section=document.createElement('div');
-      section.className='theology-group';
-      section.innerHTML=`<div class="theology-group-head"><div><div class="theology-group-label">${group.label}</div><div class="theology-group-title">${group.title}</div></div><div class="theology-group-desc">${group.desc}</div></div><div class="theology-grid"></div>`;
-      const grid=section.querySelector('.theology-grid');
-      group.items.forEach(([num,title,desc])=>{
-        const post=findTheologyPost(posts,num,title);
-        const image=theologyImages[num] || (post && (post.image || post.cover || post.thumbnail || post.imageUrl)) || '';
-        const card=document.createElement('button');
-        card.type='button';
-        card.className='theology-card';
-        const visual=image
-          ? `<div class="theology-card-visual"><img src="${image}" alt="${title}" loading="lazy"></div>`
-          : `<div class="theology-card-visual"><div class="theology-card-visual-placeholder"><span>${num}</span></div></div>`;
-        card.innerHTML=`${visual}<span class="theology-card-body"><span class="theology-num">${num} / MISSION NOTE</span><h3>${title}</h3><p>${post&&post.summary ? post.summary : desc}</p><span class="theology-arrow">→</span></span>`;
-        card.addEventListener('click',()=>{
-          if(post){ openPostLightbox(post); }
-          else {
-            const note=document.querySelector('.theology-note');
-            if(note){ note.textContent=`${num}. ${title}의 내용은 현재 준비 중입니다. 노션의 '선교신학' 카테고리에 글을 연결하면 이곳에서 바로 열립니다.`; setTimeout(()=>{ note.textContent='현재 7개의 글이 준비되어 있으며, 마지막 08번은 태국에서 사역하며 계속 다듬어 갈 선교사로서의 약속으로 남겨두었습니다.'; },3200); }
-          }
-        });
-        grid.appendChild(card);
-      });
-      root.appendChild(section);
-    });
-  }
-
   function renderNotionPosts(posts) {
     posts = Array.isArray(posts) ? posts : [];
     allPosts = posts;
-    renderMissionTheology(posts);
     const journeyPosts = posts.filter(p => p.category === '선교사의 부르심').slice(0, 3);
     const trainingPosts = posts.filter(p => p.category === '선교사 훈련 과정').slice(0, 3);
     const missionPosts = posts.filter(p => p.category === '선교 이야기').slice(0, 3);
     const dailyPosts = posts.filter(p => p.category === '일상 이야기').slice(0, 3);
-    const gospelPosts = posts.filter(p => p.category === '복음 이야기').slice(0, 3);
     const letterPosts = posts.filter(p => p.category === '기도 편지' || p.category === '기도편지');
     renderLane('laneJourney', journeyPosts);
     renderLane('laneTraining', trainingPosts);
     renderLane('laneMission', missionPosts);
     renderLane('laneDaily', dailyPosts);
-    renderLane('laneGospel', gospelPosts);
     renderPrayerLetters(letterPosts);
     visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
     pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
     handleGalleryHash();
     autoPrefetchAll([
-      journeyPosts, trainingPosts, missionPosts, dailyPosts, gospelPosts, letterPosts,
+      journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
       visionPost ? [visionPost] : [],
       pckPost ? [pckPost] : []
     ]);
@@ -2718,7 +2572,6 @@
           renderLane('laneTraining', []);
           renderLane('laneMission', []);
           renderLane('laneDaily', []);
-          renderLane('laneGospel', []);
           renderPrayerLetters([]);
         }
         throw err;
