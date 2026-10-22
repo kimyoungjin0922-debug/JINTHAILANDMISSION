@@ -2937,7 +2937,13 @@
     }
   }
 
-  function openPostLightbox(post) {
+  function openPostLightbox(post, fromSharedLink = false) {
+    if (!post) return;
+    // 게시글을 열면 주소에 글 ID를 기록해, 주소 복사/새로고침/공유 후에도 같은 글을 열 수 있게 합니다.
+    if (post.id && !fromSharedLink) {
+      const targetHash = '#post-' + encodeURIComponent(post.id);
+      if (location.hash !== targetHash) history.pushState(null, '', location.pathname + location.search + targetHash);
+    }
     postLightboxImages.innerHTML='';
     if(post.video){
       postLightboxVideo.style.display='';
@@ -2975,9 +2981,16 @@
     }
   }
 
-  postLightboxClose.addEventListener('click', () => { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); });
-  postLightboxOverlay.addEventListener('click', (e) => { if (e.target === postLightboxOverlay) { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { postLightboxOverlay.classList.remove('open'); unlockBodyScroll(); } });
+  function closePostLightbox() {
+    postLightboxOverlay.classList.remove('open');
+    unlockBodyScroll();
+    if (location.hash.indexOf('#post-') === 0) {
+      history.pushState(null, '', location.pathname + location.search);
+    }
+  }
+  postLightboxClose.addEventListener('click', closePostLightbox);
+  postLightboxOverlay.addEventListener('click', (e) => { if (e.target === postLightboxOverlay) closePostLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePostLightbox(); });
 
   // [수정] ===== 글별 공유 모달 =====
   function buildShareUrl(post) {
@@ -3067,6 +3080,7 @@
     visionPost = posts.find(p => p.category === '비전검증문' || p.category === '비전 검증문') || null;
     pckPost = posts.find(p => p.category === 'PCK 총회 선교사' || p.category === 'PCK총회 선교사') || null;
     handleGalleryHash();
+    handlePostHash();
     autoPrefetchAll([
       journeyPosts, trainingPosts, missionPosts, dailyPosts, letterPosts,
       visionPost ? [visionPost] : [],
@@ -3195,6 +3209,22 @@
     if (m && allPosts.length) openCategoryOverlay(decodeURIComponent(m[1]));
   }
   window.addEventListener('hashchange', handleGalleryHash);
+
+  // 공유 링크(#post-글ID)로 접속하면 목록을 불러온 뒤 해당 게시글을 바로 엽니다.
+  function handlePostHash() {
+    const match = location.hash.match(/^#post-(.+)$/);
+    if (!match || !allPosts.length) return;
+    let postId;
+    try { postId = decodeURIComponent(match[1]); } catch (e) { postId = match[1]; }
+    const post = allPosts.find(p => String(p.id) === String(postId));
+    if (post && !postLightboxOverlay.classList.contains('open')) {
+      openPostLightbox(post, true);
+    } else if (post && currentLightboxPost && String(currentLightboxPost.id) !== String(post.id)) {
+      openPostLightbox(post, true);
+    }
+  }
+  window.addEventListener('hashchange', handlePostHash);
+  window.addEventListener('popstate', () => { if (location.hash.indexOf('#post-') === 0) handlePostHash(); });
 
   // ===== 검색 (홈에 이미 불러와 둔 전체 글에서 즉시 검색 — 노션에 추가로 접속하지 않음) =====
   function wireSiteSearch(inputEl, resultsEl) {
