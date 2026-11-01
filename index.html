@@ -596,41 +596,41 @@
   .share-copy-link.copied{color:var(--orange-deep);}
   @media (max-width:420px){ .share-modal-grid{grid-template-columns:1fr;} }
 
-  /* ===== 파송예배 팝업 ===== */
-  .mission-service-popup-overlay{
-    position:fixed;inset:0;z-index:360;background:rgba(8,30,38,.72);
-    display:flex;align-items:center;justify-content:center;padding:18px;
-    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  /* ===== 파송예배 감사 팝업 ===== */
+  .mission-thanks-overlay{
+    position:fixed;inset:0;z-index:500;background:rgba(8,30,38,.68);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;
   }
-  .mission-service-popup-overlay.open{opacity:1;pointer-events:auto;}
-  .mission-service-popup{
-    position:relative;background:#fff;border-radius:18px;max-width:620px;width:min(92vw,620px);
-    max-height:94vh;overflow:auto;padding:10px;box-shadow:0 30px 70px rgba(0,0,0,.38);
-    transform:translateY(16px);transition:transform .25s ease;
+  .mission-thanks-overlay.open{opacity:1;visibility:visible;pointer-events:auto;}
+  .mission-thanks-modal{
+    position:relative;width:min(92vw,520px);max-height:90vh;overflow:auto;
+    padding:42px 34px 32px;border-radius:24px;text-align:center;
+    background:linear-gradient(160deg,#fff 0%,#f7fbfc 100%);
+    box-shadow:0 28px 75px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.8);
+    transform:translateY(14px);transition:transform .25s ease;
   }
-  .mission-service-popup-overlay.open .mission-service-popup{transform:translateY(0);}
-  .mission-service-popup-image{width:100%;height:auto;display:block;border-radius:12px;}
-  .mission-service-popup-close{
-    position:absolute;top:18px;right:18px;width:38px;height:38px;border:0;border-radius:50%;
-    background:rgba(0,0,0,.62);color:#fff;font-size:26px;line-height:38px;text-align:center;
-    cursor:pointer;z-index:2;box-shadow:0 3px 12px rgba(0,0,0,.25);transition:background .2s,transform .2s;
+  .mission-thanks-overlay.open .mission-thanks-modal{transform:translateY(0);}
+  .mission-thanks-mark{
+    width:62px;height:62px;margin:0 auto 18px;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;background:#e4f2fa;color:#0b637a;font-size:30px;
   }
-  .mission-service-popup-close:hover{background:rgba(0,0,0,.8);transform:scale(1.05);}
-  .mission-service-popup-share{
-    position:absolute;top:18px;right:64px;display:flex;align-items:center;gap:5px;
-    padding:8px 13px;border:0;border-radius:100px;background:rgba(255,255,255,.92);
-    color:var(--navy);font-size:12.5px;font-weight:800;cursor:pointer;
-    box-shadow:0 3px 12px rgba(0,0,0,.18);transition:background .2s,transform .2s;z-index:2;
+  .mission-thanks-eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:#e87a1b;margin-bottom:10px;}
+  .mission-thanks-modal h2{font-size:clamp(23px,5vw,30px);line-height:1.4;font-weight:850;color:#0b3c4d;margin-bottom:18px;word-break:keep-all;}
+  .mission-thanks-modal p{font-size:15px;line-height:1.9;color:#526468;margin-bottom:12px;word-break:keep-all;}
+  .mission-thanks-names{font-size:15px;font-weight:800;color:#0b3c4d;margin-top:18px;}
+  .mission-thanks-x{
+    position:absolute;top:12px;right:12px;width:36px;height:36px;border:0;border-radius:50%;
+    background:#edf2f3;color:#526468;font-size:24px;line-height:36px;cursor:pointer;
   }
-  .mission-service-popup-share:hover{background:#fff;transform:translateY(-1px);}
-  .mission-service-popup-share svg{width:14px;height:14px;}
-  @media (max-width:600px){
-    .mission-service-popup-overlay{padding:10px;}
-    .mission-service-popup{width:96vw;max-height:96vh;padding:6px;border-radius:14px;}
-    .mission-service-popup-image{border-radius:10px;}
-    .mission-service-popup-close{top:12px;right:12px;width:36px;height:36px;font-size:24px;line-height:36px;}
-    .mission-service-popup-share{top:12px;right:56px;padding:8px 11px;font-size:12px;}
+  .mission-thanks-x:hover{background:#dce9ed;color:#0b3c4d;}
+  .mission-thanks-close{
+    display:inline-flex;align-items:center;justify-content:center;min-width:132px;margin-top:24px;
+    padding:12px 24px;border:0;border-radius:100px;background:#0b3c4d;color:#fff;
+    font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;
   }
+  .mission-thanks-close:hover{background:#e87a1b;transform:translateY(-1px);}
+  @media(max-width:600px){.mission-thanks-modal{padding:36px 22px 26px;border-radius:20px}.mission-thanks-modal p{font-size:14px}}
   .post-lightbox-images{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;border-radius:14px;overflow:hidden;}
   .post-lightbox-images img{width:100%;border-radius:14px;display:block;}
   .post-lightbox-date{font-size:12px;font-weight:700;color:var(--sky);margin-bottom:8px;letter-spacing:.03em;}
@@ -1175,81 +1175,6 @@
     .field-map-wrap img{max-height:520px;}
   }
 
-  /* ===== 2026 추석 안내 팝업 ===== */
-  .chuseok-popup-overlay{
-    position:fixed;
-    inset:0;
-    z-index:500;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.58);
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none;
-    transition:opacity .2s ease,visibility .2s ease;
-  }
-  .chuseok-popup-overlay.is-visible{
-    opacity:1;
-    visibility:visible;
-    pointer-events:auto;
-  }
-  .chuseok-popup-overlay.is-hidden{
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none;
-  }
-  .chuseok-popup{
-    position:relative;
-    width:min(92vw, 720px);
-    max-height:92vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    border-radius:14px;
-    box-shadow:0 24px 70px rgba(0,0,0,.35);
-    background:#fff;
-  }
-  .chuseok-popup-image{
-    display:block;
-    width:100%;
-    height:auto;
-    max-height:92vh;
-    object-fit:contain;
-  }
-  .chuseok-popup-close{
-    position:absolute;
-    top:10px;
-    right:10px;
-    z-index:2;
-    width:40px;
-    height:40px;
-    border:0;
-    border-radius:50%;
-    background:rgba(0,0,0,.55);
-    color:#fff;
-    font-size:28px;
-    line-height:40px;
-    text-align:center;
-    cursor:pointer;
-    box-shadow:0 2px 10px rgba(0,0,0,.2);
-    transition:background .2s ease,transform .2s ease;
-  }
-  .chuseok-popup-close:hover{
-    background:rgba(0,0,0,.75);
-    transform:scale(1.05);
-  }
-  @media (max-width:600px){
-    .chuseok-popup-overlay{padding:12px;}
-    .chuseok-popup{width:94vw;border-radius:10px;}
-    .chuseok-popup-close{
-      top:7px;right:7px;width:36px;height:36px;
-      font-size:24px;line-height:36px;
-    }
-  }
-
 /* =========================================================
    [NEW] 선교 홈페이지 확장 콘텐츠
    - 왜 태국인가 / 왜 이산인가
@@ -1382,25 +1307,18 @@
 </head>
 <body>
 
-<!-- ===== 2026 추석 안내 팝업 ===== -->
-<div id="chuseokPopupOverlay" class="chuseok-popup-overlay" role="dialog" aria-modal="true" aria-label="2026년 추석 명절 안내">
-  <div class="chuseok-popup">
-    <button type="button" id="chuseokPopupClose" class="chuseok-popup-close" aria-label="추석 안내 팝업 닫기">×</button>
-    <img class="chuseok-popup-image" src="chuseok-2026-popup.png" alt="2026년 한가위 즐거운 추석 명절 되세요">
-  </div>
-</div>
-
-
-
-<!-- ===== 파송예배 안내 팝업 ===== -->
-<div id="missionServicePopupOverlay" class="mission-service-popup-overlay" role="dialog" aria-modal="true" aria-label="김영진·박은신 선교사 파송예배 안내">
-  <div class="mission-service-popup">
-    <button type="button" id="missionServicePopupShare" class="mission-service-popup-share" aria-label="파송예배 안내 공유">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>
-      <span>공유</span>
-    </button>
-    <button type="button" id="missionServicePopupClose" class="mission-service-popup-close" aria-label="파송예배 팝업 닫기">×</button>
-    <img class="mission-service-popup-image" src="파송예배(최종본).png" alt="김영진·박은신 선교사 파송예배 안내">
+<!-- ===== 파송예배 감사 팝업 ===== -->
+<div id="missionThanksOverlay" class="mission-thanks-overlay" role="dialog" aria-modal="true" aria-labelledby="missionThanksTitle">
+  <div class="mission-thanks-modal">
+    <button type="button" id="missionThanksCloseX" class="mission-thanks-x" aria-label="감사 메시지 닫기">×</button>
+    <div class="mission-thanks-mark" aria-hidden="true">♡</div>
+    <div class="mission-thanks-eyebrow">THANK YOU</div>
+    <h2 id="missionThanksTitle">파송예배를 은혜 가운데<br>잘 마쳤습니다</h2>
+    <p>김영진·박은신 선교사의 파송예배를 위해 함께 기도해 주시고, 귀한 사랑과 마음을 보내 주신 모든 분께 진심으로 감사드립니다.</p>
+    <p>여러분의 기도와 후원을 힘입어 태국 이산 지역에서 복음을 전하는 사명을 잘 감당하겠습니다.</p>
+    <p>앞으로도 태국 선교의 여정을 위해 계속 기도해 주시고 함께 동역해 주세요.</p>
+    <div class="mission-thanks-names">김영진·박은신 선교사 드림</div>
+    <button type="button" id="missionThanksClose" class="mission-thanks-close">감사합니다</button>
   </div>
 </div>
 
@@ -3689,100 +3607,26 @@
 
 
 <script>
-  /* ===== 파송예배 팝업 ===== */
+  /* ===== 파송예배 감사 메시지 팝업 ===== */
   (function(){
-    const popup = document.getElementById('missionServicePopupOverlay');
-    const closeBtn = document.getElementById('missionServicePopupClose');
-    const shareBtn = document.getElementById('missionServicePopupShare');
+    const popup = document.getElementById('missionThanksOverlay');
+    const closeBtn = document.getElementById('missionThanksClose');
+    const closeX = document.getElementById('missionThanksCloseX');
     if(!popup || !closeBtn) return;
 
     const closePopup = function(){
       popup.classList.remove('open');
       document.body.style.overflow = '';
     };
-
     const openPopup = function(){
       popup.classList.add('open');
       document.body.style.overflow = 'hidden';
     };
-
     closeBtn.addEventListener('click', closePopup);
-    popup.addEventListener('click', function(e){
-      if(e.target === popup) closePopup();
-    });
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') closePopup();
-    });
-
-    if(shareBtn){
-      shareBtn.addEventListener('click', async function(){
-        const url = window.location.href.split('#')[0];
-        const shareData = {
-          title: '김영진·박은신 선교사 파송예배',
-          text: '김영진·박은신 선교사 파송예배 안내',
-          url: url
-        };
-
-        try{
-          if(navigator.share){
-            await navigator.share(shareData);
-          }else if(navigator.clipboard){
-            await navigator.clipboard.writeText(url);
-            const original = shareBtn.querySelector('span')?.textContent || '공유';
-            const label = shareBtn.querySelector('span');
-            if(label) label.textContent = '링크 복사됨';
-            setTimeout(() => { if(label) label.textContent = original; }, 1800);
-          }else{
-            window.prompt('아래 링크를 복사해 주세요.', url);
-          }
-        }catch(err){
-          // 사용자가 시스템 공유창을 닫은 경우에는 아무 동작도 하지 않습니다.
-        }
-      });
-    }
-
-    // 페이지에 들어오면 파송예배 안내를 바로 보여줍니다.
+    if(closeX) closeX.addEventListener('click', closePopup);
+    popup.addEventListener('click', function(e){ if(e.target === popup) closePopup(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePopup(); });
     window.addEventListener('load', openPopup);
-  })();
-</script>
-
-
-<script>
-  /* ===== 2026 추석 안내 팝업: 2026-09-24 ~ 2026-09-26 (한국시간) ===== */
-  (function(){
-    const popup = document.getElementById('chuseokPopupOverlay');
-    const closeBtn = document.getElementById('chuseokPopupClose');
-    if(!popup || !closeBtn) return;
-
-    const koreaToday = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Seoul',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }).format(new Date());
-
-    const showFrom = '2026-09-24';
-    const showUntil = '2026-09-27'; // 27일 00:00부터 자동 숨김
-    const shouldShow = koreaToday >= showFrom && koreaToday < showUntil;
-
-    if(!shouldShow){
-      popup.remove();
-      return;
-    }
-
-    popup.classList.add('is-visible');
-
-    const closePopup = function(){
-      popup.classList.add('is-hidden');
-    };
-
-    closeBtn.addEventListener('click', closePopup);
-    popup.addEventListener('click', function(e){
-      if(e.target === popup) closePopup();
-    });
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') closePopup();
-    });
   })();
 
   // ===== [NEW] FAQ 아코디언 =====
