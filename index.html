@@ -3118,8 +3118,46 @@
     shareModalOverlay.addEventListener('click', (e) => { if (e.target === shareModalOverlay) closeShareModal(); });
   }
 
+  // 모바일 공유: Web Share API를 우선 사용하고, Android 웹뷰에서 미지원이면
+  // Android ACTION_SEND 인텐트로 시스템 공유 대상 선택창을 엽니다.
+  function openAndroidNativeShare(text) {
+    const encodedText = encodeURIComponent(text).replace(/'/g, '%27');
+    const intentUrl = 'intent://send/#Intent;action=android.intent.action.SEND;type=text/plain;'
+      + 'S.android.intent.extra.TEXT=' + encodedText + ';end';
+    window.location.href = intentUrl;
+  }
+
+  async function shareFromMobile(type, title, url) {
+    const shareText = title + ' - 김&박 한 태국 선교\n' + url;
+    const shareData = { title: title, text: shareText };
+
+    // 모바일 브라우저에서는 반드시 사용자 클릭 이벤트 안에서 즉시 호출합니다.
+    if (typeof navigator.share === 'function') {
+      try {
+        if (!navigator.canShare || navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+          closeShareModal();
+          return;
+        }
+      } catch (error) {
+        if (error && error.name === 'AbortError') return; // 사용자가 공유창을 닫음
+        console.warn('Web Share API 실패, Android 공유 인텐트로 전환:', error);
+      }
+    }
+
+    // Chrome/Samsung Internet의 일부 웹뷰처럼 navigator.share가 없는 Android 환경 대응
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    if (isAndroid) {
+      openAndroidNativeShare(shareText);
+      return;
+    }
+
+    // iPhone/iPad 등 Web Share API가 차단된 환경에서는 복사로 오인시키지 않고 안내
+    alert('이 브라우저에서는 앱 공유 기능을 사용할 수 없습니다. Safari 또는 Chrome에서 홈페이지를 열어 다시 시도해 주세요.');
+  }
+
   document.querySelectorAll('.share-option').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (event) => {
       if (!currentLightboxPost) return;
       const url = buildShareUrl(currentLightboxPost);
       const title = currentLightboxPost.title || '태국 선교 이야기';
@@ -3130,39 +3168,9 @@
       } else if (type === 'threads') {
         window.open('https://www.threads.net/intent/post?text=' + encodeURIComponent(title + ' ' + url), '_blank', 'noopener,noreferrer');
       } else if (type === 'kakao' || type === 'instagram') {
-        // 모바일 기본 공유창을 열어 사용자가 카카오톡/인스타그램과 공유 대상을 직접 선택합니다.
-        // 웹 표준 공유 API는 특정 앱을 강제로 지정할 수 없으므로 앱 선택은 사용자에게 맡깁니다.
-        const shareData = {
-          title: title,
-          text: title + ' - 김&박 한 태국 선교',
-          url: url
-        };
-        if (navigator.share) {
-          navigator.share(shareData).then(() => {
-            closeShareModal();
-          }).catch((error) => {
-            // 사용자가 공유창을 닫은 경우에는 아무 작업도 하지 않습니다.
-            if (error && error.name !== 'AbortError') {
-              console.warn('공유를 실행하지 못했습니다:', error);
-            }
-          });
-        } else {
-          // 기본 공유 API를 지원하지 않는 PC 브라우저에서는 링크를 복사해 안내합니다.
-          const copyText = title + '\n' + url;
-          const copyPromise = navigator.clipboard && navigator.clipboard.writeText
-            ? navigator.clipboard.writeText(copyText)
-            : Promise.reject(new Error('Clipboard API unavailable'));
-          copyPromise.then(() => {
-            const small = btn.querySelector('small');
-            if (small) {
-              const original = small.textContent;
-              small.textContent = '링크가 복사되었습니다. 앱에서 붙여넣으세요.';
-              setTimeout(() => { small.textContent = original; }, 2600);
-            }
-          }).catch(() => {
-            window.prompt('아래 링크를 복사해 공유해 주세요.', url);
-          });
-        }
+        // 두 버튼 모두 모바일 시스템 공유창을 열어 해당 앱/개인 계정을 선택하게 합니다.
+        // 특정 앱을 자동 지정하는 공식 공유는 각 서비스의 SDK/앱 설정이 별도로 필요합니다.
+        shareFromMobile(type, title, url);
       }
     });
   });
