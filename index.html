@@ -3819,7 +3819,16 @@
 
     popup.addEventListener('click', function(e){ if(e.target === popup) closePopup(); });
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePopup(); });
-    window.addEventListener('load', openPopup);
+
+    // 홈페이지 첫 화면으로 직접 들어온 경우에만 감사 팝업을 표시합니다.
+    // #post-글ID, #gallery/카테고리 등 개별 콘텐츠 공유 링크로 접속하면
+    // 팝업을 아예 열지 않아 게시글을 읽는 도중 팝업이 덮이는 일을 방지합니다.
+    window.addEventListener('load', function(){
+      const path = (location.pathname || '/').replace(/\/+/g, '/');
+      const isHomePage = path === '/' || path === '/index.html';
+      const hasNoDeepLink = !location.hash || location.hash === '#';
+      if (isHomePage && hasNoDeepLink) openPopup();
+    }, { once: true });
   })();
 
   // ===== [NEW] FAQ 아코디언 =====
