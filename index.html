@@ -639,6 +639,14 @@
     font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;
   }
   .mission-thanks-close:hover{background:#e87a1b;transform:translateY(-1px);}
+  .mission-thanks-prayer-card{
+    display:inline-flex;align-items:center;justify-content:center;min-width:172px;margin:22px 8px 0 0;
+    padding:12px 22px;border:1px solid #0b637a;border-radius:100px;background:#fff;color:#0b637a;
+    font-family:inherit;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;
+    transition:background .2s,transform .2s,color .2s;
+  }
+  .mission-thanks-prayer-card:hover{background:#e4f2fa;color:#0b3c4d;transform:translateY(-1px);}
+  @media(max-width:600px){.mission-thanks-modal{padding:36px 22px 26px;border-radius:20px}.mission-thanks-modal p{font-size:14px}.mission-thanks-prayer-card{margin:18px 0 0;}}
   @media(max-width:600px){.mission-thanks-modal{padding:36px 22px 26px;border-radius:20px}.mission-thanks-modal p{font-size:14px}}
   .post-lightbox-images{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;border-radius:14px;overflow:hidden;}
   .post-lightbox-images img{width:100%;border-radius:14px;display:block;}
@@ -1328,6 +1336,7 @@
     <p>여러분의 기도와 후원을 힘입어 태국 이산 지역에서 복음을 전하는 사명을 잘 감당하겠습니다.</p>
     <p>앞으로도 태국 선교의 여정을 위해 계속 기도해 주시고 함께 동역해 주세요.</p>
     <div class="mission-thanks-names">김영진·박은신 선교사 드림</div>
+    <a class="mission-thanks-prayer-card" href="#gallery/기도카드" onclick="document.getElementById('missionThanksOverlay').classList.remove('open'); document.body.style.overflow='';">최신 기도카드 보기</a>
     <button type="button" id="missionThanksClose" class="mission-thanks-close">감사합니다</button>
   </div>
 </div>
