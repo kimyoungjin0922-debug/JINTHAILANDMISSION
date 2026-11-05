@@ -1,7 +1,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>김&박 한 태국 선교</title>
 
 <meta property="og:type" content="website">
@@ -1320,6 +1320,204 @@
   font-size: 10.5px;
   font-weight: 600;
 }
+
+
+  /* ===== PC/웹 게시글: 모바일과 동일한 전체 화면 읽기 화면 ===== */
+  @media (min-width: 601px) {
+    .post-lightbox-overlay {
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+      background: #fff;
+      overscroll-behavior: contain;
+    }
+    .post-lightbox-modal {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: 100vh;
+      height: 100dvh;
+      max-height: none;
+      margin: 0;
+      padding: 92px clamp(36px, 7vw, 110px) 64px;
+      border-radius: 0;
+      box-shadow: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      transform: none;
+      transition: none;
+      background: #fff;
+      touch-action: pan-y pinch-zoom;
+    }
+    .post-lightbox-overlay.open .post-lightbox-modal { transform: none; }
+    #postLightboxClose {
+      position: fixed;
+      top: 20px;
+      right: 26px;
+      z-index: 12;
+      width: 48px;
+      height: 48px;
+      font-size: 22px;
+      background: #f1f4f4;
+      color: var(--navy);
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+    .post-share-trigger {
+      position: fixed;
+      top: 25px;
+      right: 88px;
+      z-index: 12;
+      min-height: 40px;
+      padding: 9px 16px;
+      font-size: 15px;
+      background: #f1f4f4;
+    }
+    .post-lightbox-date {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+    #postLightboxTitle {
+      font-size: clamp(30px, 3vw, 42px);
+      line-height: 1.4;
+      margin: 0 auto 26px;
+      max-width: 1120px;
+      padding-right: 0;
+      word-break: keep-all;
+    }
+    #postLightboxDate,
+    #postLightboxSummary,
+    .post-lightbox-images,
+    .post-lightbox-video,
+    .post-pray-block,
+    .post-partner-btn,
+    .post-continue {
+      max-width: 1120px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #postLightboxSummary {
+      font-size: 20px;
+      line-height: 2;
+      color: #354448;
+      overflow-wrap: break-word;
+      word-break: normal;
+      touch-action: pan-y pinch-zoom;
+    }
+    #postLightboxSummary p { margin-bottom: 22px; }
+    #postLightboxSummary h1 { font-size: 32px; }
+    #postLightboxSummary h2 { font-size: 28px; }
+    #postLightboxSummary h3 { font-size: 23px; }
+    .post-lightbox-images { margin-bottom: 26px; }
+    .post-lightbox-images img,
+    #postLightboxSummary img { border-radius: 14px; height: auto; }
+    .post-lightbox-video iframe { width: 100%; min-height: min(62vh, 680px); }
+  }
+
+  /* ===== 모바일 게시글: 팝업이 아닌 전체 화면 읽기 화면 ===== */
+  @media (max-width: 600px) {
+    .post-lightbox-overlay {
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 0;
+      background: #fff;
+      opacity: 0;
+      overscroll-behavior: contain;
+      transition: opacity .18s ease;
+    }
+    .post-lightbox-overlay.open {
+      opacity: 1;
+    }
+    .post-lightbox-modal {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      height: 100vh;
+      height: 100dvh;
+      max-height: none;
+      margin: 0;
+      padding: calc(env(safe-area-inset-top, 0px) + 76px) 22px calc(env(safe-area-inset-bottom, 0px) + 42px);
+      border-radius: 0;
+      box-shadow: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      transform: none;
+      transition: none;
+      background: #fff;
+      touch-action: pan-y pinch-zoom;
+    }
+    .post-lightbox-overlay.open .post-lightbox-modal {
+      transform: none;
+    }
+    #postLightboxClose {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 14px);
+      right: 16px;
+      z-index: 12;
+      width: 42px;
+      height: 42px;
+      font-size: 20px;
+      background: #f1f4f4;
+      color: var(--navy);
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+    .post-share-trigger {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 17px);
+      right: 70px;
+      z-index: 12;
+      min-height: 36px;
+      padding: 8px 13px;
+      font-size: 14px;
+      background: #f1f4f4;
+    }
+    .post-lightbox-date {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    #postLightboxTitle {
+      font-size: clamp(23px, 6vw, 28px);
+      line-height: 1.45;
+      margin-bottom: 18px;
+      padding-right: 0;
+      word-break: keep-all;
+    }
+    #postLightboxSummary {
+      font-size: 17px;
+      line-height: 1.95;
+      color: #354448;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+    #postLightboxSummary p { margin-bottom: 17px; }
+    #postLightboxSummary h1 { font-size: 25px; }
+    #postLightboxSummary h2 { font-size: 22px; }
+    #postLightboxSummary h3 { font-size: 19px; }
+    #postLightboxSummary ul,
+    #postLightboxSummary ol { padding-left: 25px; }
+    .post-lightbox-images {
+      gap: 12px;
+      margin-bottom: 22px;
+      border-radius: 12px;
+    }
+    .post-lightbox-images img,
+    #postLightboxSummary img {
+      border-radius: 12px;
+    }
+    .post-lightbox-video iframe {
+      width: 100%;
+      min-height: 220px;
+    }
+    .post-pray-block,
+    .post-partner-btn,
+    .post-continue {
+      margin-top: 26px;
+    }
+  }
+
 </style>
 </head>
 <body>
