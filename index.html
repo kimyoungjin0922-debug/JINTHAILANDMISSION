@@ -3609,6 +3609,16 @@
     };
     closeBtn.addEventListener('click', closePopup);
     if(closeX) closeX.addEventListener('click', closePopup);
+
+    // 최신 기도편지 버튼을 누르면 팝업을 즉시 닫고 링크의 기도편지로 이동
+    const latestPrayerLink = popup.querySelector('.mission-thanks-prayer-card');
+    if(latestPrayerLink){
+      latestPrayerLink.addEventListener('click', function(){
+        closePopup();
+        // 기본 링크 이동은 그대로 두어 지정된 기도편지 해시로 이동
+      });
+    }
+
     popup.addEventListener('click', function(e){ if(e.target === popup) closePopup(); });
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePopup(); });
     window.addEventListener('load', openPopup);
