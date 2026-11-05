@@ -1336,7 +1336,7 @@
     <p>여러분의 기도와 후원을 힘입어 태국 이산 지역에서 복음을 전하는 사명을 잘 감당하겠습니다.</p>
     <p>앞으로도 태국 선교의 여정을 위해 계속 기도해 주시고 함께 동역해 주세요.</p>
     <div class="mission-thanks-names">김영진·박은신 선교사 드림</div>
-    <a class="mission-thanks-prayer-card" href="#letter" onclick="return openLatestPrayerLetter();">최신 기도편지 보기</a>
+    <a class="mission-thanks-prayer-card" href="https://jinthaimission.com/#post-40fc308b-73af-8015-abf2-e0b5ac1ad5fc">2026-7 기도편지 보기</a>
     <button type="button" id="missionThanksClose" class="mission-thanks-close">감사합니다</button>
   </div>
 </div>
@@ -2966,31 +2966,6 @@
   const NOTION_LIST_CACHE_TTL = 30 * 60 * 1000;
   let notionLoadPromise = null;
 
-
-  // 파송 감사 팝업에서 가장 최근에 등록한 기도편지를 바로 엽니다.
-  // 2026-7은 7월이 아니라 올해 일곱 번째 기도편지의 게시 순번을 뜻합니다.
-  function openLatestPrayerLetter() {
-    const overlay = document.getElementById('missionThanksOverlay');
-    if (overlay) overlay.classList.remove('open');
-    document.body.style.overflow = '';
-
-    // allPosts는 노션에서 최신순으로 전달되므로,
-    // 기도편지 카테고리 중 첫 번째 항목이 가장 최근 게시물입니다.
-    const letter = allPosts.find(post => {
-      const category = String(post.category || '').replace(/\\s/g, '');
-      return category === '기도편지';
-    });
-
-    if (letter) {
-      openPostLightbox(letter);
-    } else {
-      location.hash = '#letter';
-      const section = document.getElementById('letter');
-      if (section) section.scrollIntoView({ behavior: 'smooth' });
-      alert('등록된 기도편지를 찾지 못했습니다. 기도편지 목록을 확인해 주세요.');
-    }
-    return false;
-  }
 
   function renderNotionPosts(posts) {
     posts = Array.isArray(posts) ? posts : [];
