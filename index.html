@@ -2126,7 +2126,7 @@
     <div class="share-modal-grid">
       <button type="button" class="share-option kakao" data-share="kakao">
         <span class="share-option-icon">💬</span>
-        <span class="share-option-text"><strong>KakaoTalk</strong><small>카카오톡으로 공유</small></span>
+        <span class="share-option-text"><strong>KakaoTalk</strong><small>공유 화면에서 카카오톡 선택</small></span>
       </button>
       <button type="button" class="share-option facebook" data-share="facebook">
         <span class="share-option-icon">📘</span>
@@ -2134,7 +2134,7 @@
       </button>
       <button type="button" class="share-option instagram" data-share="instagram">
         <span class="share-option-icon">📷</span>
-        <span class="share-option-text"><strong>Instagram</strong><small>링크 복사 후 Instagram</small></span>
+        <span class="share-option-text"><strong>Instagram</strong><small>공유 화면에서 Instagram 선택</small></span>
       </button>
       <button type="button" class="share-option threads" data-share="threads">
         <span class="share-option-icon">🧵</span>
@@ -3130,16 +3130,39 @@
       } else if (type === 'threads') {
         window.open('https://www.threads.net/intent/post?text=' + encodeURIComponent(title + ' ' + url), '_blank', 'noopener,noreferrer');
       } else if (type === 'kakao' || type === 'instagram') {
-        // 카카오톡/인스타그램은 별도 앱 API 키 없이는 자동으로 대화방/게시물에 붙여넣을 수 없어서,
-        // 링크를 복사해드리고 해당 앱에 직접 붙여넣도록 안내합니다.
-        navigator.clipboard?.writeText(title + ' ' + url).then(() => {
-          const small = btn.querySelector('small');
-          if (small) {
-            const original = small.textContent;
-            small.textContent = '링크가 복사되었어요!';
-            setTimeout(() => { small.textContent = original; }, 1800);
-          }
-        });
+        // 모바일 기본 공유창을 열어 사용자가 카카오톡/인스타그램과 공유 대상을 직접 선택합니다.
+        // 웹 표준 공유 API는 특정 앱을 강제로 지정할 수 없으므로 앱 선택은 사용자에게 맡깁니다.
+        const shareData = {
+          title: title,
+          text: title + ' - 김&박 한 태국 선교',
+          url: url
+        };
+        if (navigator.share) {
+          navigator.share(shareData).then(() => {
+            closeShareModal();
+          }).catch((error) => {
+            // 사용자가 공유창을 닫은 경우에는 아무 작업도 하지 않습니다.
+            if (error && error.name !== 'AbortError') {
+              console.warn('공유를 실행하지 못했습니다:', error);
+            }
+          });
+        } else {
+          // 기본 공유 API를 지원하지 않는 PC 브라우저에서는 링크를 복사해 안내합니다.
+          const copyText = title + '\n' + url;
+          const copyPromise = navigator.clipboard && navigator.clipboard.writeText
+            ? navigator.clipboard.writeText(copyText)
+            : Promise.reject(new Error('Clipboard API unavailable'));
+          copyPromise.then(() => {
+            const small = btn.querySelector('small');
+            if (small) {
+              const original = small.textContent;
+              small.textContent = '링크가 복사되었습니다. 앱에서 붙여넣으세요.';
+              setTimeout(() => { small.textContent = original; }, 2600);
+            }
+          }).catch(() => {
+            window.prompt('아래 링크를 복사해 공유해 주세요.', url);
+          });
+        }
       }
     });
   });
